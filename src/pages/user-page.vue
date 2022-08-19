@@ -2,7 +2,7 @@
   <div class="page-user">
       <div class="dashboard-user">
         <div class="total">
-          <h2>{{total}}</h2>
+          <h2>{{totalUsers}}</h2>
           <p>총 유저수</p>
         </div>
         <div class="new-user">
@@ -16,15 +16,15 @@
       </div>
       <div class="area-user">
         <div class="search-bar">
-          <select name="search-filter" id="search-type">
-              <option value="">닉네임</option>
-              <option value="">UID</option>
-              <option value="">핸드폰</option>
-              <option value="">이름</option>
-              <option value="">직업</option>
+          <select @change="selectSearchType($event)" name="search-filter" id="search-type">
+              <option value="nickname">닉네임</option>
+              <option value="uid">UID</option>
+              <option value="phone">핸드폰</option>
+              <option value="name">이름</option>
+              <option value="job">직업</option>
           </select>
-          <input type="search">
-          <button>검색</button>
+          <input type="search" @keyup.enter="search()" v-model="keyword">
+          <button @click="search()">검색</button>
         </div>
         <table class="table-user">
           <thead>
@@ -32,104 +32,103 @@
             <th v-for="head in heads" v-bind:key="head">{{head}}</th>
           </thead>
           <tbody>
-            <tr v-for="user in data" v-bind:key="user">
-              <img src="@/assets/logo.png" alt="">
-              <td v-for="d in user" v-bind:key="d">{{d}}</td>
+            <tr v-for="user in users" v-bind:key="user">
+              <img :src="user.profileImgUrl" alt="">
+              <td>{{user.nickname}}</td>
+              <td>{{user.uid}}</td>
+              <td>{{user.phone}}</td>
+              <td>{{user.name}}</td>
+              <td>{{user.job}}</td>
             </tr>
           </tbody>
         </table>
         <div class="page-controller">
-          <button><img src="@/assets/icons/pre-chevron.svg" alt="이전버튼"></button>
+          <button @click ="previousPage()"><img src="@/assets/icons/pre-chevron.svg" alt="이전버튼"></button>
           <p>{{page}}</p>
-          <button><img src="@/assets/icons/next-chevron.svg" alt="이전버튼"></button>
+          <button @click ="nextPage()"><img src="@/assets/icons/next-chevron.svg" alt="이전버튼"></button>
         </div>
       </div>
   </div>
 </template>
 
 <script>
+import axios from "axios"
 export default {
     name: "UserPage",
     data() {
       return {
-        total: "1.2M",
+        // 대시보드
+        totalUsers: null,
         newUser: "1.4K",
         resigned: "0",
-        page: 1,
+
+        // 검색
+        selectType: "nickname",
+        keyword: null,
+        
+        // 페이지
         heads:['유저', 'UID', '핸드폰', '이름', '직업'],
-        data:[
-          {
-            nickname : "ablebody_officalwwww",
-            uid : 9999999,
-            phone : '01012341234',
-            name : '이름이름이름이름이름이름이름이름이름이름',
-            job : '직업직업직업직업직업'
-          },
-          {
-            nickname : "ablebody_officalwwww",
-            uid : 9999999,
-            phone : '01012341234',
-            name : '이름이름이름이름이름이름이름이름이름이름',
-            job : '직업직업직업직업직업'
-          },
-          {
-            nickname : "ablebody_officalwwww",
-            uid : 9999999,
-            phone : '01012341234',
-            name : '이름이름이름이름이름이름이름이름이름이름',
-            job : '직업직업직업직업직업'
-          },
-          {
-            nickname : "ablebody_officalwwww",
-            uid : 9999999,
-            phone : '01012341234',
-            name : '이름이름이름이름이름이름이름이름이름이름',
-            job : '직업직업직업직업직업'
-          },
-          {
-            nickname : "ablebody_offical",
-            uid : 9999999,
-            phone : '01012341234',
-            name : '이름이름이름이이름이름이름이름',
-            job : '직업직업직업직업직업'
-          },
-          {
-            nickname : "ablebody_officalwwww",
-            uid : 9999999,
-            phone : '01012341234',
-            name : '이름이름이름이름이름이름이름이름이름이름',
-            job : '직업직업직업직업직업'
-          },
-          {
-            nickname : "ablebody_officalwwww",
-            uid : 9999999,
-            phone : '01012341234',
-            name : '이름이름이름이름이름이름이름이름이름이름',
-            job : '직업직업직업직업직업'
-          },
-          {
-            nickname : "ablebody_officalwwww",
-            uid : 9999999,
-            phone : '01012341234',
-            name : '이름이름이름이름이름이름이름이름이름이름',
-            job : '직업직업직업직업직업'
-          },
-          {
-            nickname : "ablebody_officalwwww",
-            uid : 9999999,
-            phone : '01012341234',
-            name : '이름이름이름이름이름이름이름이름이름이름',
-            job : '직업직업직업직업직업'
-          },
-          {
-            nickname : "ablebody_officalwwww",
-            uid : 9999999,
-            phone : '01012341234',
-            name : '이름이름이름이름이름이름이름이름이름이름',
-            job : '직업직업직업직업직업'
-          }
-        ]
+        page: 1,
+        totalPages: null,
+        users: null
       }
+    },
+    methods: {
+      fetchData(page){
+        axios.get('/user?page=' + page)
+        .then(res=>{
+          this.totalUsers = res.data.data.totalElements
+
+          this.users = res.data.data.content
+          this.totalPages = res.data.data.totalPages
+        })
+      },
+      nextPage(){
+        if(this.page < this.totalPages){
+          this.page = this.page +1
+        }
+
+        if(!this.keyword){
+          this.fetchData(this.page)
+        }
+        else{
+          this.fetchSearchUser(this.selectType, this.keyword, this.page)
+        }
+      },
+      previousPage(){
+        if(this.page > 1){
+          this.page = this.page -1
+        }
+        if(!this.keyword){
+          this.fetchData(this.page)
+        }
+        else{
+          this.fetchSearchUser(this.selectType, this.keyword, this.page)
+        }
+      },
+      selectSearchType(event){
+        this.selectType = event.target.value
+      },
+      fetchSearchUser(searchType, keyword, page){
+        axios.get('/user/search?type='+searchType+"&keyword="+keyword+"&page="+page)
+        .then(res=>{
+          this.users = res.data.data.content
+          this.totalPages = res.data.data.totalPages
+        })
+      },
+      search(){
+        this.page = 1
+        if(!this.keyword){
+          this.fetchData(this.page)
+        }
+        else{
+          this.fetchSearchUser(this.selectType, this.keyword, this.page)
+        }
+      }
+    },
+    created() {
+      this.fetchData(this.page)
+      this.fetchSearchUser(this.selectType, this.keyword, this.page)
     },
 }
 </script>
@@ -225,7 +224,7 @@ export default {
   flex: 0 6rem;
 }
 .table-user > thead > th:nth-child(4){
-  flex: 0 10rem;
+  flex: 0 12rem;
 }
 .table-user > thead > th:nth-child(5){
   flex: 1 26rem;
@@ -269,7 +268,7 @@ export default {
   flex: 0 6rem;
 }
 .table-user > tbody > tr > :nth-child(6n+4){
-  flex: 0 10rem;
+  flex: 0 12rem;
 }
 .table-user > tbody > tr > :nth-child(6n+5){
   flex: 1 26rem;
