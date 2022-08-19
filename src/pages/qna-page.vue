@@ -1,0 +1,441 @@
+<template>
+  <div class="page-qna">
+      <div class="dashboard-qna">
+        <div class="total">
+          <h2>{{total}}</h2>
+          <p>전체 게시물 수</p>
+        </div>
+        <div class="new-user">
+          <h2>{{newUser}}</h2>
+          <p>신규 게시물</p>
+        </div>
+        <div class="resigned">
+          <h2>{{resigned}}</h2>
+          <p>이용자 수</p>
+        </div>
+        <div class="resigned">
+          <h2>59:59</h2>
+          <p>이용시간</p>
+        </div>
+      </div>
+      <div class="area-qna">
+        <div class="search-bar">
+          <select name="search-filter" id="search-type">
+              <option value="">번호</option>
+              <option value="">카테고리</option>
+              <option value="">제목</option>
+              <option value="">내용</option>
+              <option value="">해시태그</option>
+              <option value="">작성자</option>
+          </select>
+          <input type="search">
+          <button>검색</button>
+        </div>
+        <table class="table-qna">
+          <thead>
+            <th v-for="head in heads" v-bind:key="head">{{head}}</th>
+          </thead>
+          <tbody>
+            <tr v-for="qna in data" v-bind:key="qna">
+              <td v-for="d in qna" v-bind:key="d">{{d}}</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="page-controller">
+          <button><img src="@/assets/icons/pre-chevron.svg" alt="이전버튼"></button>
+          <p>{{page}}</p>
+          <button><img src="@/assets/icons/next-chevron.svg" alt="이전버튼"></button>
+        </div>
+      </div>
+  </div>
+</template>
+
+<script>
+export default {
+    name: "UserPage",
+    data() {
+      return {
+        total: "1.2M",
+        newUser: "1.4K",
+        resigned: "0",
+        page:2,
+        heads: ['번호', '카테고리', '제목', '작성자', '좋아요', '댓글수', '조회수', '작성시간'],
+        data:[
+          {
+            id: 101,
+            category: "MYHEALTHYSTORY",
+            title: '골프의 관중은 왜 갤러리라고 할까요?',
+            writer:'wwwwwwwwwwwwwwwwwwww',
+            likes: 100,
+            comments: 100,
+            views: 100,
+            작성시간: '2022-08-15T12:12:12'
+          },
+          {
+            id: 101,
+            category: "MYHEALTHYSTORY",
+            title: '가가가가가나나나나나가가가가가나나나나나가가가가가나나나나나',
+            writer:'wwwwwwwwwwwwwwwwwwww',
+            likes: 100,
+            comments: 100,
+            views: 100,
+            작성시간: '2022-08-15T12:12:12'
+          },
+          {
+            id: 101,
+            category: "MYHEALTHYSTORY",
+            title: '가가가가가나나나나나가가가가가나나나나나가가가가가나나나나나',
+            writer:'wwwwwwwwwwwwwwwwwwww',
+            likes: 100,
+            comments: 100,
+            views: 100,
+            작성시간: '2022-08-15T12:12:12'
+          },
+          {
+            id: 101,
+            category: "MYHEALTHYSTORY",
+            title: '가가가가가나나나나나가가가가가나나나나나가가가가가나나나나나',
+            writer:'wwwwwwwwwwwwwwwwwwww',
+            likes: 100,
+            comments: 100,
+            views: 100,
+            작성시간: '2022-08-15T12:12:12'
+          },
+          {
+            id: 101,
+            category: "MYHEALTHYSTORY",
+            title: '가가가가가나나나나나가가가가가나나나나나가가가가가나나나나나',
+            writer:'wwwwwwwwwwwwwwwwwwww',
+            likes: 100,
+            comments: 100,
+            views: 100,
+            작성시간: '2022-08-15T12:12:12'
+          },
+          {
+            id: 101,
+            category: "MYHEALTHYSTORY",
+            title: '가가가가가나나나나나가가가가가나나나나나가가가가가나나나나나',
+            writer:'wwwwwwwwwwwwwwwwwwww',
+            likes: 100,
+            comments: 100,
+            views: 100,
+            작성시간: '2022-08-15T12:12:12'
+          },
+          {
+            id: 101,
+            category: "MYHEALTHYSTORY",
+            title: '가가가가가나나나나나가가가가가나나나나나가가가가가나나나나나',
+            writer:'wwwwwwwwwwwwwwwwwwww',
+            likes: 100,
+            comments: 100,
+            views: 100,
+            작성시간: '2022-08-15T12:12:12'
+          },
+          {
+            id: 101,
+            category: "MYHEALTHYSTORY",
+            title: '가가가가가나나나나나가가가가가나나나나나가가가가가나나나나나',
+            writer:'wwwwwwwwwwwwwwwwwwww',
+            likes: 100,
+            comments: 100,
+            views: 100,
+            작성시간: '2022-08-15T12:12:12'
+          },
+          {
+            id: 101,
+            category: "MYHEALTHYSTORY",
+            title: '가가가가가나나나나나가가가가가나나나나나가가가가가나나나나나',
+            writer:'wwwwwwwwwwwwwwwwwwww',
+            likes: 100,
+            comments: 100,
+            views: 100,
+            작성시간: '2022-08-15T12:12:12'
+          },
+          {
+            id: 101,
+            category: "MYHEALTHYSTORY",
+            title: '가가가가가나나나나나가가가가가나나나나나가가가가가나나나나나',
+            writer:'wwwwwwwwwwwwwwwwwwww',
+            likes: 100,
+            comments: 100,
+            views: 100,
+            작성시간: '2022-08-15T12:12:12'
+          },
+          {
+            id: 101,
+            category: "MYHEALTHYSTORY",
+            title: '가가가가가나나나나나가가가가가나나나나나가가가가가나나나나나',
+            writer:'wwwwwwwwwwwwwwwwwwww',
+            likes: 100,
+            comments: 100,
+            views: 100,
+            작성시간: '2022-08-15T12:12:12'
+          },
+          {
+            id: 101,
+            category: "MYHEALTHYSTORY",
+            title: '가가가가가나나나나나가가가가가나나나나나가가가가가나나나나나',
+            writer:'wwwwwwwwwwwwwwwwwwww',
+            likes: 100,
+            comments: 100,
+            views: 100,
+            작성시간: '2022-08-15T12:12:12'
+          },
+          {
+            id: 101,
+            category: "MYHEALTHYSTORY",
+            title: '가가가가가나나나나나가가가가가나나나나나가가가가가나나나나나',
+            writer:'wwwwwwwwwwwwwwwwwwww',
+            likes: 100,
+            comments: 100,
+            views: 100,
+            작성시간: '2022-08-15T12:12:12'
+          },
+          {
+            id: 101,
+            category: "MYHEALTHYSTORY",
+            title: '가가가가가나나나나나가가가가가나나나나나가가가가가나나나나나',
+            writer:'wwwwwwwwwwwwwwwwwwww',
+            likes: 100,
+            comments: 100,
+            views: 100,
+            작성시간: '2022-08-15T12:12:12'
+          },
+          {
+            id: 101,
+            category: "MYHEALTHYSTORY",
+            title: '가가가가가나나나나나가가가가가나나나나나가가가가가나나나나나',
+            writer:'wwwwwwwwwwwwwwwwwwww',
+            likes: 100,
+            comments: 100,
+            views: 100,
+            작성시간: '2022-08-15T12:12:12'
+          },
+          {
+            id: 116,
+            category: "MYHEALTHYSTORY",
+            title: '가가가가가나나나나나가가가가가나나나나나가가가가가나나나나나',
+            writer:'wwwwwwwwwwwwwwwwwwww',
+            likes: 100,
+            comments: 100,
+            views: 100,
+            작성시간: '2022-08-15T12:12:12'
+          }
+        ]
+      }
+    },
+}
+</script>
+
+<style>
+@import url(@/assets/colors.css);
+.page-qna{
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.dashboard-qna{
+  width: 100%;
+  height: 14%;
+  display: flex;
+  gap:10px;
+}
+
+.dashboard-qna > div{
+  height: 100%;
+  flex: 1 100px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.dashboard-qna > div > h2{
+  font-size: 5.4rem;
+  margin: 0;
+  line-height: 1;
+}
+.dashboard-qna > div > p{
+  font-size: 1.5rem;
+  height: fit-content;
+  margin: 0px;
+  color: var(--light);
+}
+.area-qna{
+  width: 90%;
+  flex:1 500px;
+  background: var(--light-shaded);
+  margin-bottom: 2%;
+  border-radius: 30px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.search-bar{
+  width: 70%;
+  height: 4%;
+  margin-top: 2%;
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  padding: 1% 0px;
+}
+.search-bar > input{
+  width: 50%;
+}
+.table-qna{
+  width: 98%;
+  height: 83%;
+  display: flex;
+  flex-direction: column;
+  
+  /* - 가로스크롤 -*/
+  overflow: auto;
+  white-space: nowrap;
+}
+.table-qna > thead{
+  width: 96%;
+  min-width: 125rem;
+  height: 5%;
+  padding: 0% 2%;
+  background: none;
+  border-bottom: solid 1px var(--abledark);
+
+  display: flex;
+  align-items: center;
+  gap: 1%
+}
+.table-qna > thead > th{
+  height: fit-content;
+  line-height: 1;
+}
+.table-qna > thead > :nth-child(1){
+  /* 번호 */
+  flex: 0 0 6rem;
+  display: flex;
+  justify-content: center;
+}
+.table-qna > thead > th:nth-child(2){
+  /* 카테고리 */
+  flex: 0 0 15rem;
+}
+.table-qna > thead > th:nth-child(3){
+  /* 제목 */
+  flex: 0 0 40rem;
+}
+.table-qna > thead > th:nth-child(4){
+  /* 작성자 */
+  flex: 0 0 22rem;
+}
+.table-qna > thead > th:nth-child(5){
+  /* 좋아요 */
+  flex: 0 0 5rem;
+  display: flex;
+  justify-content: center;
+}
+.table-qna > thead > th:nth-child(6){
+  /* 댓글수 */
+  flex: 0 0 5rem;
+  display: flex;
+  justify-content: center;
+}
+.table-qna > thead > th:nth-child(7){
+  /* 조회수 */
+  flex: 0 0 5rem;
+  display: flex;
+  justify-content: center;
+}
+.table-qna > thead > th:nth-child(8){
+  /* 작성시간 */
+  flex: 1 0 15rem;
+  display: flex;
+  justify-content: center;
+}
+
+.table-qna > tbody{
+  width: 98%;
+  height: 91%;
+  padding: 1%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5%;
+}
+.table-qna > tbody >tr{
+  width: 98%;
+  min-width: 125rem;
+  height: 5%;
+  background: var(--white);
+  border-radius: 10px;
+  display: flex;
+  gap: 1%;
+  padding : 0% 1%;
+  align-items: center;
+}
+.table-qna > tbody > tr > td{
+  height: fit-content;
+  font-size: 1.5rem;
+  line-height: 1;
+}
+.table-qna > tbody > tr > :nth-child(8n+1){
+  /* 번호 값*/
+  flex: 0 0 6rem;
+  display: flex;
+  justify-content: center;
+}
+.table-qna > tbody > tr > :nth-child(8n+2){
+  /* 카테고리 값*/
+  flex: 0 0 15rem;
+}
+.table-qna > tbody > tr > :nth-child(8n+3){
+  /* 제목 값*/
+  flex: 0 0 40rem;
+}
+.table-qna > tbody > tr > :nth-child(8n+4){
+  /* 작성자 값*/
+  flex: 0 0 22rem;
+}
+.table-qna > tbody > tr > :nth-child(8n+5){
+  /* 좋아요 값*/
+  flex: 0 0 5rem;
+  display: flex;
+  justify-content: center;
+}
+.table-qna > tbody > tr > :nth-child(8n+6){
+  /* 댓글수 값*/
+  flex: 0 0 5rem;
+  display: flex;
+  justify-content: center;
+}
+.table-qna > tbody > tr > :nth-child(8n+7){
+  /* 조회수 값*/
+  flex: 0 0 5rem;
+  display: flex;
+  justify-content: center;
+}
+.table-qna > tbody > tr > :nth-child(8n+8){
+  /* 작성시간 값*/
+  flex: 1 0 15rem;
+  display: flex;
+  justify-content: center;
+}
+.page-controller{
+  width: 200px;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.page-controller > button{
+  width: 60px;
+  height: 40px;
+}
+.page-controller > button > img{
+  width: 100%;
+  height: 100%;
+}
+.page-controller > p{
+  margin: 0% 10%;
+  font-size: 2rem;
+}
+</style>
