@@ -59,8 +59,8 @@ export default {
       return {
         // 대시보드
         totalUsers: null,
-        newUser: "1.4K",
-        resigned: "0",
+        newUser: null,
+        resigned: null,
 
         // 검색
         selectType: "nickname",
@@ -124,11 +124,19 @@ export default {
         else{
           this.fetchSearchUser(this.selectType, this.keyword, this.page)
         }
+      },
+      fetchUserVariance(){
+        axios.get('/user/variance')
+        .then(res=>{
+            this.newUser = res.data.data.newUser
+            this.resigned = res.data.data.resigned
+        })
       }
     },
     created() {
       this.fetchData(this.page)
       this.fetchSearchUser(this.selectType, this.keyword, this.page)
+      this.fetchUserVariance()
     },
 }
 </script>
