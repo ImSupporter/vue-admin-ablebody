@@ -4,19 +4,39 @@
     <div class="login-form">
       <div class="id-form">
         <p>ID</p>
-        <input type="text">
+        <input type="text" placeholder="아이디를 입력해주세요" v-model="id">
       </div>
       <div class="password-form">
         <p>Password</p>
-        <input type="password" name="" id="">
+        <input type="password" placeholder="비밀번호를 입력해주세요" v-model="pw" @keyup.enter="login()">
       </div>
-      <button>로그인</button>
+      <button @click="login()">로그인</button>
     </div>
   </div>
 </template>
 
 <script>
+//import axios from 'axios';
 export default {
+  data() {
+    return {
+      id: "",
+      pw: "",
+      loginSuccess: false,
+      loginError: false,
+    }
+  },
+  methods: {
+    async login(){
+      var loginForm = {
+        username: this.id,
+        password: this.pw
+      }
+      await this.$store.dispatch('login', loginForm)
+      alert(this.id + '님 환영합니다')
+      this.$router.push('/user')
+    }
+  },
 }
 </script>
 
@@ -73,7 +93,6 @@ export default {
   border: 0;
   border-bottom: 2px solid black;
   outline: 0;
-
 }
 .id-form{
   margin-top: 50px;

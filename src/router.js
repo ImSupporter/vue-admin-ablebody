@@ -6,6 +6,7 @@ import QnaPage from './pages/qna-page';
 import ReportPage from './pages/report-page';
 import SuggesstionPage from './pages/suggestion-page';
 import LonginPage from '@/pages/login-page'
+import store from './store';
 
 // 라우트 정보
 // 라우팅을 해주면서 #을 제거해주면서, path에 입력한 경로에 매핑된 컴포넌트를 보여준다.
@@ -33,17 +34,42 @@ const route = [
                 path: 'suggestion',
                 component: SuggesstionPage,
                 name : '제안하기'
+            },
+            {
+                path: '*',
+                redirect: 'user'
             }
-        ]
+        ],
+        meta: {
+            requiresAuth: true
+        }
     },
     {
         path: '/login',
         component: LonginPage
-    }
+    },
 ];
 
-// Vue 라우터 인스턴스 생성
-export const router = createRouter({
+const router = createRouter({
     history: createWebHistory(),
     routes: route,
-  });
+});
+
+router.beforeEach((to, from, next) => {
+    if(to.matched.some(record => record.meta.requiresAuth)){
+        if(!store.getters.isLoggedIn){
+            next({
+                path: '/login'
+            })
+        }
+        else{
+            next();
+        }
+    }
+    else{
+        next();
+    }
+});
+
+//Vue 라우터 인스턴스 생성
+export {router};
