@@ -56,15 +56,9 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-    if(to.matched.some(record => record.meta.requiresAuth)){
-        if(!store.getters.isLoggedIn){
-            next({
-                path: '/login'
-            })
-        }
-        else{
-            next();
-        }
+    if(to.meta.requiresAuth && !store.getters.isLoggedIn){
+        next('/login')
+        console.log('인증이 필요합니다 ' + store.getters.isLoggedIn)
     }
     else{
         next();

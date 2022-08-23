@@ -1,16 +1,18 @@
 import { createStore } from 'vuex'
 import axios from 'axios';
+import {
+  saveLoginStatus,
+  getLoginStatus
+} from '@/utils/cookie'
 
 export default createStore({
   state: {
-    loginSuccess: false,
+    loginSuccess: getLoginStatus() || false,
     loginError: false,
-    sessionId: "",
   },
   getters: {
     isLoggedIn: state => state.loginSuccess,
     hasLoginErrored: state => state.loginError,
-    getSessionId: state => state.sessionId,
   },
   mutations: {
     loginSuccess(state) {
@@ -31,9 +33,10 @@ export default createStore({
             );
             if (result.status === 200) {
                 commit('loginSuccess');
+                saveLoginStatus(true)
             }
         } catch (err) {
-            commit('loginError', {});
+            commit('loginError');
             throw new Error(err)
         }
     }
