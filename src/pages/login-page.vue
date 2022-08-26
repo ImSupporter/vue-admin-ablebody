@@ -32,7 +32,7 @@ export default {
         username: this.id,
         password: this.pw
       }
-      await this.$store.dispatch('login', loginForm)
+      await this.$store.dispatch('userLogin', loginForm)
       alert(this.id + '님 환영합니다')
       this.$router.push('/user')
     }

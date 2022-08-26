@@ -1,5 +1,5 @@
 import { createStore } from 'vuex'
-import axios from 'axios';
+import { login } from '@/api/auth'
 import {
   saveLoginStatus,
   getLoginStatus
@@ -21,26 +21,25 @@ export default createStore({
     loginError(state) {
         state.loginError = true;
     },
-  },
-  actions: {
-    async login({commit}, {username, password}){
-        try {
-            const result = await axios.post('/login',
-                {
-                    username: username,
-                    password: password
-                }
-            );
-            if (result.status === 200) {
-                commit('loginSuccess');
-                saveLoginStatus(true)
-            }
-        } catch (err) {
-            commit('loginError');
-            throw new Error(err)
-        }
+    authFail(state){
+      state.loginSuccess = false 
     }
   },
+  actions: {
+    authFail({commit}){
+      commit('authFail')
+      saveLoginStatus(false)
+      console.log('인증 만료!!')
+    },
+    async userLogin({ commit }, userData){
+      const response = await login(userData);
+      console.log(response)
+      commit('loginSuccess')
+      saveLoginStatus(true)
+      return response
+    }
+  },
+  
   modules: {
   }
 })

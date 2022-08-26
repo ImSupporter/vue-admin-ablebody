@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import axios from 'axios';
+import { apiInstance } from '@/api/index';
 
 export default {
     name: "SuggestionPage",
@@ -48,11 +48,10 @@ export default {
       }
     },
     methods: {
-      fetchSuggestions(page){
-        axios.get('/suggestion?page='+page)
-        .then(res=>{
-          this.rows = res.data.data.content
-        })
+      async fetchSuggestions(page){
+        const response = await apiInstance.get('/suggestion?page='+page)
+        
+        this.rows = response.data.data.content
       },
       showModal(suggestion){
         this.modal_nickname = suggestion.nickname

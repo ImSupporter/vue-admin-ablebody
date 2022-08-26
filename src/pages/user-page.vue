@@ -52,7 +52,7 @@
 </template>
 
 <script>
-import axios from "axios"
+import { apiInstance } from '@/api'
 export default {
     name: "UserPage",
     data() {
@@ -74,15 +74,6 @@ export default {
       }
     },
     methods: {
-      fetchData(page){
-        axios.get('/user?page=' + page)
-        .then(res=>{
-          this.totalUsers = res.data.data.totalElements
-
-          this.users = res.data.data.content
-          this.totalPages = res.data.data.totalPages
-        })
-      },
       nextPage(){
         if(this.page < this.totalPages){
           this.page = this.page +1
@@ -109,13 +100,6 @@ export default {
       selectSearchType(event){
         this.selectType = event.target.value
       },
-      fetchSearchUser(searchType, keyword, page){
-        axios.get('/user/search?type='+searchType+"&keyword="+keyword+"&page="+page)
-        .then(res=>{
-          this.users = res.data.data.content
-          this.totalPages = res.data.data.totalPages
-        })
-      },
       search(){
         this.page = 1
         if(!this.keyword){
@@ -125,17 +109,42 @@ export default {
           this.fetchSearchUser(this.selectType, this.keyword, this.page)
         }
       },
-      fetchUserVariance(){
-        axios.get('/user/variance')
-        .then(res=>{
-            this.newUser = res.data.data.newUser
-            this.resigned = res.data.data.resigned
-        })
-      }
+      async fetchUserVariance(){
+        const response = await apiInstance.get('/user/variance')
+        this.newUser = response.data.data.newUser
+        this.resigned = response.data.data.resigned
+      },
+      async fetchSearchUser(searchType, keyword, page){
+        console.log(keyword)
+        const response = await apiInstance.get('/user/search', {
+            params:{
+              type: searchType,
+              keyword: keyword,
+              page: page
+            }
+          }
+        )
+
+        this.users = response.data.data.content
+        this.totalPages = response.data.data.totalPages
+      },
+      async fetchData(page){
+        const response = await apiInstance.get('/user', {
+            params:{
+              page: page
+            }
+         }
+        )
+
+        this.totalUsers = response.data.data.totalElements
+
+        this.users = response.data.data.content
+        this.totalPages = response.data.data.totalPages
+      },
     },
     created() {
       this.fetchData(this.page)
-      this.fetchSearchUser(this.selectType, this.keyword, this.page)
+      //this.fetchSearchUser(this.selectType, this.keyword, this.page)
       this.fetchUserVariance()
     },
 }

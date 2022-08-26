@@ -7,4 +7,5 @@ import { VueCookies } from 'vue-cookies'
 const app = createApp(App).use(store);
 app.use(router)
 app.use(VueCookies)
+
 app.mount('#app');
