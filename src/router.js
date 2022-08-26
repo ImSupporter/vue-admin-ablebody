@@ -13,6 +13,7 @@ import store from './store';
 const route = [
     {
         path: "/", 
+        redirect: "/user",
         component: DashboardLayout,
         children:[
             {
