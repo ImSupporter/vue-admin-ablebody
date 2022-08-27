@@ -6,6 +6,7 @@ import QnaPage from './pages/qna-page';
 import ReportPage from './pages/report-page';
 import SuggesstionPage from './pages/suggestion-page';
 import LonginPage from '@/pages/login-page'
+import UserDetailPage from '@/pages/user-detail-page';
 import store from './store';
 
 // 라우트 정보
@@ -20,6 +21,11 @@ const route = [
                 path: 'user',
                 component: UserPage,
                 name : '유저 관리'
+            },
+            {
+                path: "user/:uid",
+                component: UserDetailPage,
+                name : '유저 상세 정보'
             },
             {
                 path: 'qna',
