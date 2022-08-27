@@ -7,6 +7,7 @@ import ReportPage from './pages/report-page';
 import SuggesstionPage from './pages/suggestion-page';
 import LonginPage from '@/pages/login-page'
 import UserDetailPage from '@/pages/user-detail-page';
+import QnaDetailPage from '@/pages/qna-detail-page';
 import store from './store';
 
 // 라우트 정보
@@ -31,6 +32,11 @@ const route = [
                 path: 'qna',
                 component: QnaPage,
                 name : '운동생활 관리'
+            },
+            {
+                path: 'qna/:id',
+                component: QnaDetailPage,
+                name : '운동생활 상세 페이지'
             },
             {
                 path: 'report',
