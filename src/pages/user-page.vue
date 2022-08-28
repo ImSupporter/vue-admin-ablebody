@@ -32,7 +32,7 @@
             <th v-for="head in heads" v-bind:key="head">{{head}}</th>
           </thead>
           <tbody>
-            <tr v-for="user in users" v-bind:key="user">
+            <tr v-for="user in users" v-bind:key="user" @click="moveDetail(user.uid)">
               <img :src="user.profileImgUrl" alt="">
               <td>{{user.nickname}}</td>
               <td>{{user.uid}}</td>
@@ -108,6 +108,9 @@ export default {
         else{
           this.fetchSearchUser(this.selectType, this.keyword, this.page)
         }
+      },
+      moveDetail(uid){
+        this.$router.push('/user/' + uid)
       },
       async fetchUserVariance(){
         const response = await apiInstance.get('/user/variance')

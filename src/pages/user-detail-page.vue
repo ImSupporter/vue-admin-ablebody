@@ -1,23 +1,69 @@
 <template>
-  <div class="page-user-detail">
+    <!--모달 창-->
+    <div class="modal-background" v-if="modalShown">
+        <div class="userDetail-modal-main" v-if="modalShown">
+            <h3>닉네임</h3>
+            <input type="text">
+
+            <h3>이름</h3>
+            <input type="text">
+
+            <h3>직업</h3>
+            <input type="text">
+
+            <h3>성별</h3>
+            <div class="radios">
+                <label><input type="radio" name="gender" value="MALE">남자</label>
+                <label><input type="radio" name="gender" value="FEMALE">여자</label>
+            </div>
+
+            <h3>키</h3>
+            <input type="text">
+
+            <h3>몸무게</h3>
+            <input type="text">
+
+            <h3>UID</h3>
+            <input type="text">
+
+            <h3>핸드폰</h3>
+            <input type="text">
+
+            <h3>마케팅 수신여부</h3>
+            <div class="radios">
+                <label><input type="radio" name="consent" value=true>동의</label>
+                <label><input type="radio" name="consent" value=false>거부</label>
+            </div>
+            
+            <h3>소개글</h3>
+            <textarea></textarea>
+
+            <div class="modal-btns">
+                <button style="color: var(--ableblue)">취소</button>
+                <button @click="modalShown = false" style="background: var(--ableblue); color: var(--white);">확인</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="page-user-detail">
         <div class="user-header">
             <div class="header-buttons">
-                <button style="background: var(--small-text-grey)">수정</button>
+                <button style="background: var(--small-text-grey)" @click="modalShown = true;">수정</button>
                 <button style="background: var(--ableblue)">루틴으로 가기</button>
             </div>
-            <img src="@/assets/logo.png" alt="유저 프로필 사진">
+            <img :src="user.profileUrl" alt="유저 프로필 사진" style="width: 200px;height:200px;">
             <div class="user-header-profile">
-                <h1>ablebody_official</h1>
+                <h1>{{user.nickname}}</h1>
                 <div class="name-label">
-                    <label>이름 : </label><label>애블바디</label>
+                    <label>이름 : </label><label>{{user.name}}</label>
                 </div>
                 <div class="job-label">
-                    <label>직업 : </label><label>null</label>
+                    <label>직업 : </label><label>{{user.job}}</label>
                 </div>
                 <div class="user-tags">
-                    <p>남자</p>
-                    <p>170cm</p>
-                    <p>80kg</p>
+                    <p>{{user.gender}}</p>
+                    <p v-if="user.height">{{user.height + ' cm'}}</p>
+                    <p v-if="user.weight">{{user.weight + ' kg'}}</p>
                 </div>
             </div>
         </div>
@@ -27,15 +73,15 @@
         <div class="user-info">
             <div class="detail-content">
                 <strong>UID</strong>
-                <label>#9999999</label>
+                <label>{{'#'+user.uid}}</label>
             </div>
             <div class="detail-content">
                 <strong>핸드폰</strong>
-                <label>010-1234-1234</label>
+                <label>{{user.phone}}</label>
             </div>
             <div class="detail-content">
                 <strong>가입일</strong>
-                <label>2022-06-29T11:06:05</label>
+                <label>{{user.createDate}}</label>
             </div>
             <div class="detail-content">
                 <strong>마케팅 수신동의 여부</strong>
@@ -45,15 +91,35 @@
                 <strong>소개글</strong>
             </div>
             <div class="introduction">
-                안녕하세요 스마일헌터 애블바디 박태현 입니다
+                {{user.introduction}}
             </div>
         </div>
-  </div>
+    </div>
 </template>
 
 <script>
+import { apiInstance } from '@/api/index'
 export default {
-
+    data() {
+        return {
+            user:null ,
+            modalShown: true,
+        }
+    },
+    methods: {
+        async fetchUser(uid){
+            const response = await apiInstance.get('/user/detail',{
+                params:{
+                    uid: uid
+                }
+            })
+            this.user = response.data.data;
+            console.log(this.user);
+        }
+    },
+    created() {
+        this.fetchUser(this.$route.params.uid)
+    },
 }
 </script>
 
@@ -157,6 +223,89 @@ export default {
     background: var(--plane-grey);
     display: flex;
     font-size: 2rem;
+}
+
+/** ----------------- 모달 -------------------- */
+.modal-background{
+  background: #000000A0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+}
+.userDetail-modal-main{
+    padding: 40px;
+    display: flex;
+    justify-content: baseline;
+    align-items: baseline;
+    flex-direction: column;
+    gap: 5px;
+
+  position: relative;
+  width: 40%;
+  height: 70%;
+
+  background: #FFFFFF;
+  box-shadow: 0px 8px 30px rgba(0, 0, 0, 0.12);
+  border-radius: 16px;
+  z-index: 100;
+
+  overflow-y: scroll;
+}
+
+.userDetail-modal-main > h3{
+    font-size: 2rem;
+    margin: 0;
+}
+.userDetail-modal-main > input{
+    height: 30px;
+    font-size: 2rem;
+    margin: 0;
+    margin-bottom: 20px;
+    width: 100%;
+}
+.userDetail-modal-main > textarea{
+    font-size: 2rem;
+    margin-bottom: 20px;
+    width: 100%;
+    flex: 200px 0 0;
+    resize: none;
+}
+.radios{
+    margin-bottom: 20px;
+}
+.radios > label{
+    font-size: 2rem;
+}
+
+.modal-btns{
+  left: 50%;
+  width: 100%;
+  height: 40px;
+
+  display: flex;
+  justify-content: center;
+  gap: 17px;
+}
+.modal-btns button{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+
+  width: 209px;
+  height: 40px;
+  border-radius: 8px;
+  border: 0;
+
+  font-weight: 700;
 }
 
 </style>
