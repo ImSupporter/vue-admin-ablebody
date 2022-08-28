@@ -4,7 +4,7 @@ import { setInterceptors } from './common/interceptors';
 // 엑시오스 초기화
 function createInstance() {
   const instance = axios.create({
-    baseURL: 'http://localhost:8080',
+    baseURL: 'http://34.83.214.64',
     credentials: true,
   });
   console.log('엑시오스 초기화');
