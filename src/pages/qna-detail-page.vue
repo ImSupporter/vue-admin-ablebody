@@ -4,7 +4,7 @@
         <p style="font-size: 1.6rem; color: var(--ableblue); background: var(--light-shaded); padding: 3px 5px; border-radius: 5px; font-weight:700;">운동했어요</p>
         <p style="font-size: 2rem; font-weight: 700; max-height: 55px;">제목 첫번째 줄</p>
         <div class="writer-profile">
-            <img src="@/assets/logo.png" alt="" style="height: 100%">
+            <img src="@/assets/logo.png" alt="" style="height: 100%;">
             <div style="height: 100%; text-align: left;">
                 <p style="margin: 0; font-size:1.8rem; font-weight:700;">ablebody_official</p>
                 <label>172cm</label>
@@ -67,7 +67,7 @@ data() {
     display: flex;
     flex-direction: column;
     align-items: baseline;
-    justify-content: end;
+    justify-content: flex-end;
     
     gap: 10px;
 }
@@ -99,7 +99,6 @@ data() {
 .text-area{
     width: 55%;
     height: 100%;
-    background: blue;
 
     display: flex;
     flex-direction: column;
@@ -129,7 +128,7 @@ data() {
 .basic-info{
     height: 30px;
     display: flex;
-    justify-content: end;
+    justify-content: flex-end;
     align-items: center;
     gap: 3px;
 }

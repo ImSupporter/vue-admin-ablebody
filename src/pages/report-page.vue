@@ -1,12 +1,29 @@
 <template>
+  <!--모달 창-->
+  <div class="modal-background" v-if="modalShown">
+    <div class="report-modal-main" v-if="modalShown">
+      <h1>{{this.reportOnModal.user.nickname}}</h1>
+      <p style="margin-top: 20px">{{this.reportOnModal.reason}}</p>
+      <p>{{this.reportOnModal.contentType + ' - ' +this.reportOnModal.contentId}}</p>
+      <label>{{this.reportOnModal.content}}</label>
+      <div class="modal-btns">
+        <button style="color: var(--ableblue)">조치완료</button>
+        <button @click="modalShown = false" style="background: var(--ableblue); color: var(--white);">확인 하러가기</button>
+      </div>
+    </div>
+  </div>
+
   <div class="main-wrapper">
     <table class="report-table">
       <thead>
         <th v-for = "(item) in header" v-bind:key="item">{{item}}</th>
       </thead>
       <tbody>
-        <tr v-for = "row in rows" v-bind:key="row">
-          <td v-for = "val in row" v-bind:key="val">{{val}}</td>
+        <tr v-for = "row in rows" v-bind:key="row" @click="this.modalSet(row)">
+          <td>{{row.id}}</td>
+          <td>{{row.user.nickname}}</td>
+          <td>{{row.content}}</td>
+          <td>{{row.reason}}</td>
         </tr>
       </tbody>
   </table>
@@ -14,104 +31,33 @@
 </template>
 
 <script>
+import { apiInstance } from '@/api/index'
+
 export default {
     name: "ReportPage",
     data() {
       return {
+        // 모달
+        modalShown: false,
+        reportOnModal: null,
+
+        // 메인
         header:["번호", "닉네임", "내용", "이유"],
-        rows:[
-          {
-            id:'101',
-            nickname: "ablebody_official",
-            content: "광고에요",
-            reason: "중복/도배성 게시물이에요"
-          },
-          {
-            id:'101',
-            nickname: "ablebody_official",
-            content: "광고에요",
-            reason: "중복/도배성 게시물이에요"
-          },
-          {
-            id:'101',
-            nickname: "ablebody_official",
-            content: "광고에요",
-            reason: "중복/도배성 게시물이에요"
-          },
-          {
-            id:'101',
-            nickname: "ablebody_official",
-            content: "광고에요",
-            reason: "중복/도배성 게시물이에요"
-          },
-          {
-            id:'101',
-            nickname: "ablebody_official",
-            content: "광고에요",
-            reason: "중복/도배성 게시물이에요"
-          },
-          {
-            id:'101',
-            nickname: "ablebody_official",
-            content: "광고에요",
-            reason: "중복/도배성 게시물이에요"
-          },
-          {
-            id:'101',
-            nickname: "ablebody_official",
-            content: "광고에요",
-            reason: "중복/도배성 게시물이에요"
-          },
-          {
-            id:'101',
-            nickname: "ablebody_official",
-            content: "광고에요",
-            reason: "중복/도배성 게시물이에요"
-          },
-          {
-            id:'101',
-            nickname: "ablebody_official",
-            content: "광고에요",
-            reason: "중복/도배성 게시물이에요"
-          },
-          {
-            id:'101',
-            nickname: "ablebody_official",
-            content: "광고에요",
-            reason: "중복/도배성 게시물이에요"
-          },
-          {
-            id:'101',
-            nickname: "ablebody_official",
-            content: "광고에요",
-            reason: "중복/도배성 게시물이에요"
-          },
-          {
-            id:'101',
-            nickname: "ablebody_official",
-            content: "광고에요",
-            reason: "중복/도배성 게시물이에요"
-          },
-          {
-            id:'101',
-            nickname: "ablebody_official",
-            content: "광고에요",
-            reason: "중복/도배성 게시물이에요"
-          },
-          {
-            id:'101',
-            nickname: "ablebody_official",
-            content: "광고에요",
-            reason: "중복/도배성 게시물이에요"
-          },
-          {
-            id:'101',
-            nickname: "ablebody_official",
-            content: "광고에요",
-            reason: "중복/도배성 게시물이에요"
-          }
-        ]
+        rows: null
       }
+    },
+    methods: {
+      async fecthReports(){
+        const response = await apiInstance.get('/report')
+        this.rows = response.data.data.content
+      },
+      modalSet(report){
+        this.reportOnModal = report;
+        this.modalShown = true;
+      }
+    },
+    created() {
+      this.fecthReports()
     },
 }
 </script>
@@ -185,5 +131,82 @@ export default {
 }
 .report-table td:nth-child(4n+4){
   flex: 40 40px;
+}
+
+/**------------------------------  모달 -----------------------------------------*/
+.modal-background{
+  background: #000000A0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.report-modal-main{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 40px;
+
+  position: relative;
+  width: 40%;
+  height: 40%;
+
+  background: #FFFFFF;
+  box-shadow: 0px 8px 30px rgba(0, 0, 0, 0.12);
+  border-radius: 16px;
+}
+
+.report-modal-main > h1{
+  font-size : 4rem;
+  font-weight: 600;
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+.report-modal-main > p{
+  font-size: 1.8rem;
+  color: var(--abledark);
+  margin: 1px 0;
+}
+.report-modal-main > label{
+  font-size: 2.0rem;
+  width: 100%;
+  height: 80%;
+  
+  background: var(--plane-grey);
+  display: flex;
+  justify-content: baseline;
+  padding: 5px;
+  border-radius: 5px;
+  overflow: auto;
+  margin: 30px 0;
+}
+.modal-btns{
+  left: 50%;
+  width: 100%;
+  height: 40px;
+
+  display: flex;
+  justify-content: center;
+  gap: 17px;
+}
+.modal-btns button{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+
+  width: 209px;
+  height: 40px;
+  border-radius: 8px;
+  border: 0;
+
+  font-weight: 700;
 }
 </style>
