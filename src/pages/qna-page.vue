@@ -2,15 +2,15 @@
   <div class="page-qna">
       <div class="dashboard-qna">
         <div class="total">
-          <h2>{{total}}</h2>
+          <h2>{{this.toalBoards}}</h2>
           <p>전체 게시물 수</p>
         </div>
         <div class="new-user">
-          <h2>{{newUser}}</h2>
+          <h2>{{'100'}}</h2>
           <p>신규 게시물</p>
         </div>
         <div class="resigned">
-          <h2>{{resigned}}</h2>
+          <h2>{{'100'}}</h2>
           <p>이용자 수</p>
         </div>
         <div class="resigned">
@@ -20,16 +20,16 @@
       </div>
       <div class="area-qna">
         <div class="search-bar">
-          <select name="search-filter" id="search-type">
-              <option value="">번호</option>
-              <option value="">카테고리</option>
-              <option value="">제목</option>
-              <option value="">내용</option>
-              <option value="">해시태그</option>
-              <option value="">작성자</option>
+          <select @change="selectSearchType($event)" name="search-filter" id="search-type">
+              <option value="id">번호</option>
+              <option value="topic">카테고리</option>
+              <option value="title">제목</option>
+              <option value="article">내용</option>
+              <option value="hashtag">해시태그</option>
+              <option value="writer">작성자</option>
           </select>
-          <input type="search">
-          <button>검색</button>
+          <input type="search" @keyup.enter="search()" v-model="keyword">
+          <button @click="search()">검색</button>
         </div>
         <table class="table-qna">
           <thead>
@@ -42,187 +42,97 @@
           </tbody>
         </table>
         <div class="page-controller">
-          <button><img src="@/assets/icons/pre-chevron.svg" alt="이전버튼"></button>
+          <button><img src="@/assets/icons/pre-chevron.svg" alt="이전버튼" @click="previousPage()"></button>
           <p>{{page}}</p>
-          <button><img src="@/assets/icons/next-chevron.svg" alt="이전버튼"></button>
+          <button><img src="@/assets/icons/next-chevron.svg" alt="다음버튼" @click="nextPage()"></button>
         </div>
       </div>
   </div>
 </template>
 
 <script>
+import { apiInstance } from '@/api/index';
+
 export default {
     name: "UserPage",
     data() {
       return {
-        total: "1.2M",
-        newUser: "1.4K",
-        resigned: "0",
-        page:2,
+        // 대시보드
+        toalBoards: null,
+
+        //검색창
+        selectType: 'id',
+        keyword: null,
+        //결과
+        totalPages: null,
+        page: 1,
         heads: ['번호', '카테고리', '제목', '작성자', '좋아요', '댓글수', '조회수', '작성시간'],
-        data:[
-          {
-            id: 101,
-            category: "MYHEALTHYSTORY",
-            title: '골프의 관중은 왜 갤러리라고 할까요?',
-            writer:'wwwwwwwwwwwwwwwwwwww',
-            likes: 100,
-            comments: 100,
-            views: 100,
-            작성시간: '2022-08-15T12:12:12'
-          },
-          {
-            id: 101,
-            category: "MYHEALTHYSTORY",
-            title: '가가가가가나나나나나가가가가가나나나나나가가가가가나나나나나',
-            writer:'wwwwwwwwwwwwwwwwwwww',
-            likes: 100,
-            comments: 100,
-            views: 100,
-            작성시간: '2022-08-15T12:12:12'
-          },
-          {
-            id: 101,
-            category: "MYHEALTHYSTORY",
-            title: '가가가가가나나나나나가가가가가나나나나나가가가가가나나나나나',
-            writer:'wwwwwwwwwwwwwwwwwwww',
-            likes: 100,
-            comments: 100,
-            views: 100,
-            작성시간: '2022-08-15T12:12:12'
-          },
-          {
-            id: 101,
-            category: "MYHEALTHYSTORY",
-            title: '가가가가가나나나나나가가가가가나나나나나가가가가가나나나나나',
-            writer:'wwwwwwwwwwwwwwwwwwww',
-            likes: 100,
-            comments: 100,
-            views: 100,
-            작성시간: '2022-08-15T12:12:12'
-          },
-          {
-            id: 101,
-            category: "MYHEALTHYSTORY",
-            title: '가가가가가나나나나나가가가가가나나나나나가가가가가나나나나나',
-            writer:'wwwwwwwwwwwwwwwwwwww',
-            likes: 100,
-            comments: 100,
-            views: 100,
-            작성시간: '2022-08-15T12:12:12'
-          },
-          {
-            id: 101,
-            category: "MYHEALTHYSTORY",
-            title: '가가가가가나나나나나가가가가가나나나나나가가가가가나나나나나',
-            writer:'wwwwwwwwwwwwwwwwwwww',
-            likes: 100,
-            comments: 100,
-            views: 100,
-            작성시간: '2022-08-15T12:12:12'
-          },
-          {
-            id: 101,
-            category: "MYHEALTHYSTORY",
-            title: '가가가가가나나나나나가가가가가나나나나나가가가가가나나나나나',
-            writer:'wwwwwwwwwwwwwwwwwwww',
-            likes: 100,
-            comments: 100,
-            views: 100,
-            작성시간: '2022-08-15T12:12:12'
-          },
-          {
-            id: 101,
-            category: "MYHEALTHYSTORY",
-            title: '가가가가가나나나나나가가가가가나나나나나가가가가가나나나나나',
-            writer:'wwwwwwwwwwwwwwwwwwww',
-            likes: 100,
-            comments: 100,
-            views: 100,
-            작성시간: '2022-08-15T12:12:12'
-          },
-          {
-            id: 101,
-            category: "MYHEALTHYSTORY",
-            title: '가가가가가나나나나나가가가가가나나나나나가가가가가나나나나나',
-            writer:'wwwwwwwwwwwwwwwwwwww',
-            likes: 100,
-            comments: 100,
-            views: 100,
-            작성시간: '2022-08-15T12:12:12'
-          },
-          {
-            id: 101,
-            category: "MYHEALTHYSTORY",
-            title: '가가가가가나나나나나가가가가가나나나나나가가가가가나나나나나',
-            writer:'wwwwwwwwwwwwwwwwwwww',
-            likes: 100,
-            comments: 100,
-            views: 100,
-            작성시간: '2022-08-15T12:12:12'
-          },
-          {
-            id: 101,
-            category: "MYHEALTHYSTORY",
-            title: '가가가가가나나나나나가가가가가나나나나나가가가가가나나나나나',
-            writer:'wwwwwwwwwwwwwwwwwwww',
-            likes: 100,
-            comments: 100,
-            views: 100,
-            작성시간: '2022-08-15T12:12:12'
-          },
-          {
-            id: 101,
-            category: "MYHEALTHYSTORY",
-            title: '가가가가가나나나나나가가가가가나나나나나가가가가가나나나나나',
-            writer:'wwwwwwwwwwwwwwwwwwww',
-            likes: 100,
-            comments: 100,
-            views: 100,
-            작성시간: '2022-08-15T12:12:12'
-          },
-          {
-            id: 101,
-            category: "MYHEALTHYSTORY",
-            title: '가가가가가나나나나나가가가가가나나나나나가가가가가나나나나나',
-            writer:'wwwwwwwwwwwwwwwwwwww',
-            likes: 100,
-            comments: 100,
-            views: 100,
-            작성시간: '2022-08-15T12:12:12'
-          },
-          {
-            id: 101,
-            category: "MYHEALTHYSTORY",
-            title: '가가가가가나나나나나가가가가가나나나나나가가가가가나나나나나',
-            writer:'wwwwwwwwwwwwwwwwwwww',
-            likes: 100,
-            comments: 100,
-            views: 100,
-            작성시간: '2022-08-15T12:12:12'
-          },
-          {
-            id: 101,
-            category: "MYHEALTHYSTORY",
-            title: '가가가가가나나나나나가가가가가나나나나나가가가가가나나나나나',
-            writer:'wwwwwwwwwwwwwwwwwwww',
-            likes: 100,
-            comments: 100,
-            views: 100,
-            작성시간: '2022-08-15T12:12:12'
-          },
-          {
-            id: 116,
-            category: "MYHEALTHYSTORY",
-            title: '가가가가가나나나나나가가가가가나나나나나가가가가가나나나나나',
-            writer:'wwwwwwwwwwwwwwwwwwww',
-            likes: 100,
-            comments: 100,
-            views: 100,
-            작성시간: '2022-08-15T12:12:12'
-          }
-        ]
+        data: null
       }
+    },
+    methods: {
+      selectSearchType(event){
+        this.selectType = event.target.value
+      },
+      search(){
+        this.page = 1
+        if(!this.keyword){
+          this.fetchData(this.page)
+        }
+        else{
+          this.fetchSearchBoard(this.selectType, this.keyword, this.page)
+        }
+      },
+      nextPage(){
+        if(this.page < this.totalPages){
+          this.page = this.page +1
+        }
+
+        if(!this.keyword){
+          this.fetchData(this.page)
+        }
+        else{
+          this.fetchSearchUser(this.selectType, this.keyword, this.page)
+        }
+      },
+      previousPage(){
+        if(this.page > 1){
+          this.page = this.page -1
+        }
+        if(!this.keyword){
+          this.fetchData(this.page)
+        }
+        else{
+          this.fetchSearchUser(this.selectType, this.keyword, this.page)
+        }
+      },
+      async fetchData(page){
+        const response = await apiInstance.get('/qna',{
+          params:{
+            page: page
+          }
+        })
+        this.toalBoards = response.data.data.totalElements;
+
+        this.totalPages = response.data.data.totalPages;
+        this.data = response.data.data.content;
+      },
+      async fetchSearchBoard(searchType, keyword, page){
+        const response = await apiInstance.get('/qna/search',{
+          params:{
+            type: searchType, 
+            keyword: keyword,
+            page: page
+          }
+        })
+        console.log(response);
+
+        this.totalPages = response.data.data.totalPages;
+        this.data = response.data.data.content;
+      }
+    },
+    created() {
+      this.fetchData(this.page);
     },
 }
 </script>
