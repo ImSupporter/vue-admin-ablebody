@@ -39,7 +39,7 @@
             <textarea></textarea>
 
             <div class="modal-btns">
-                <button style="color: var(--ableblue)">취소</button>
+                <button @click="modalShown = false" style="color: var(--ableblue)">취소</button>
                 <button @click="modalShown = false" style="background: var(--ableblue); color: var(--white);">확인</button>
             </div>
         </div>
@@ -103,7 +103,7 @@ export default {
     data() {
         return {
             user:null ,
-            modalShown: true,
+            modalShown: false,
         }
     },
     methods: {
