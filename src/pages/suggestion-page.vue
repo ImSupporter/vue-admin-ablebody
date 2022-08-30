@@ -91,6 +91,7 @@ export default {
   position: relative;
   width: 50%;
   height: 40%;
+  min-height: 400px;
 
   background: #FFFFFF;
   box-shadow: 0px 8px 30px rgba(0, 0, 0, 0.12);
@@ -117,6 +118,7 @@ export default {
   padding: 5px;
   border-radius: 5px;
   overflow: auto;
+  text-align: start;
 }
 .modal-btns{
   left: 50%;
@@ -205,6 +207,7 @@ th{
 .suggestion-table td:nth-child(4n+2){
   flex: 40 40px;
   overflow: hidden;
+  white-space: nowrap;
 }
 .suggestion-table td:nth-child(4n+3){
   flex: 20 20px;
