@@ -51,7 +51,7 @@
                 <button style="background: var(--small-text-grey)" @click="modalShown = true;">수정</button>
                 <button style="background: var(--ableblue)">루틴으로 가기</button>
             </div>
-            <img :src="user.profileUrl" alt="유저 프로필 사진" style="width: 200px;height:200px;">
+            <img :src="user.profileUrl" alt="유저 프로필 사진">
             <div class="user-header-profile">
                 <h1>{{user.nickname}}</h1>
                 <div class="name-label">
@@ -66,9 +66,6 @@
                     <p v-if="user.weight">{{user.weight + ' kg'}}</p>
                 </div>
             </div>
-        </div>
-        <div class="label">
-            
         </div>
         <div class="user-info">
             <div class="detail-content">
@@ -87,7 +84,7 @@
                 <strong>마케팅 수신동의 여부</strong>
                 <strong>켜짐</strong>
             </div>
-            <div class="detail-content" style="margin-top: 1%">
+            <div class="detail-content">
                 <strong>소개글</strong>
             </div>
             <div class="introduction">
@@ -133,7 +130,7 @@ export default {
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    gap: 5px;
+    gap: 10px;
 }
 .header-buttons{
     position: absolute;
@@ -159,7 +156,8 @@ export default {
     gap: 20px;
 }
 .user-header > img{
-    height: 100%;
+    min-height: 100px;
+    max-height: 200px;
 }
 .user-header-profile{
     height: 100%;
@@ -168,10 +166,10 @@ export default {
     flex-direction: column;
     align-items: baseline;
     justify-content: center;
-    gap: 10px;
+    gap: 2px;
 }
 .user-header-profile > h1{
-    font-size: 4rem;
+    font-size: 3rem;
     margin: 0
 }
 .user-header-profile > div > label{
@@ -204,7 +202,7 @@ export default {
     height: 70%;
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 3px;
 }
 .detail-content{
     width: 100%;
