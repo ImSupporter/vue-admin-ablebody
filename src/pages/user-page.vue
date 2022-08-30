@@ -297,14 +297,14 @@ export default {
 }
 .user-page-controller{
   width: 200px;
-  height: 5%;
+  height: 7%;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 .user-page-controller > button{
   width: 60px;
-  height: 80%;
+  height: 100%;
 }
 .user-page-controller > button > img{
   width: 100%;
