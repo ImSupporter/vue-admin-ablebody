@@ -15,7 +15,7 @@
         </div>
       </div>
       <div class="area-user">
-        <div class="search-bar">
+        <div class="user-search-bar">
           <select @change="selectSearchType($event)" name="search-filter" id="search-type">
               <option value="nickname">닉네임</option>
               <option value="uid">UID</option>
@@ -42,7 +42,7 @@
             </tr>
           </tbody>
         </table>
-        <div class="page-controller">
+        <div class="user-page-controller">
           <button @click ="previousPage()"><img src="@/assets/icons/pre-chevron.svg" alt="이전버튼"></button>
           <p>{{page}}</p>
           <button @click ="nextPage()"><img src="@/assets/icons/next-chevron.svg" alt="이전버튼"></button>
@@ -200,16 +200,15 @@ export default {
   flex-direction: column;
   align-items: center;
 }
-.search-bar{
+.user-search-bar{
   width: 70%;
   height: 4%;
-  margin-top: 2%;
   display: flex;
   gap: 10px;
   justify-content: center;
   padding: 1% 0px;
 }
-.search-bar > input{
+.user-search-bar > input{
   width: 50%;
 }
 .table-user{
@@ -296,22 +295,22 @@ export default {
 .table-user > tbody > tr > :nth-child(6n+6){
   flex: 1 13rem;
 }
-.page-controller{
+.user-page-controller{
   width: 200px;
-  height: 50px;
+  height: 5%;
   display: flex;
   justify-content: center;
   align-items: center;
 }
-.page-controller > button{
+.user-page-controller > button{
   width: 60px;
-  height: 40px;
+  height: 80%;
 }
-.page-controller > button > img{
+.user-page-controller > button > img{
   width: 100%;
   height: 100%;
 }
-.page-controller > p{
+.user-page-controller > p{
   margin: 0% 10%;
   font-size: 2rem;
 }
