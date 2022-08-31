@@ -1,7 +1,7 @@
 <template>
     <div class="qna-detail-page">
         <div class="qna-header">
-        <p style="font-size: 1.6rem; color: var(--ableblue); background: var(--light-shaded); padding: 3px 5px; border-radius: 5px; font-weight:700;">운동했어요</p>
+        <p style="font-size: 1.5rem; color: var(--ableblue); background: var(--light-shaded); padding: 3px 5px; border-radius: 5px; font-weight:700;">운동했어요</p>
         <p style="font-size: 2rem; font-weight: 700; max-height: 55px;">제목 첫번째 줄</p>
         <div class="writer-profile">
             <img src="@/assets/logo.png" alt="" style="height: 100%;">
@@ -17,12 +17,15 @@
         </div>
         <div class="qna-body">
             <div class="photo-area">
-                <img src="@/assets/logo.png" alt="" style="width:100%; height:100%; background:skyblue; object-fit: contain;">
+                <img src="@/assets/logo.png" alt="" style="width:100%; height:100%; background: var(--abledark) ;object-fit: contain;">
             </div>
             <div class="text-area">
                 <div class="board-main">
                     <div class="main-text">메인 내용입니다</div>
                     <div class="hashtags">
+                        <p class="hashtag">#해시태그</p>
+                        <p class="hashtag">#해시태그</p>
+                        <p class="hashtag">#해시태그</p>
                         <p class="hashtag">#해시태그</p>
                     </div>
                     <div class="basic-info">
@@ -68,11 +71,9 @@ data() {
     flex-direction: column;
     align-items: baseline;
     justify-content: flex-end;
-    
-    gap: 10px;
 }
 .writer-profile{
-    height: 55px;
+    height: 40px;
     width: 100%;
     display: flex;
     justify-content: baseline;
@@ -85,16 +86,14 @@ data() {
     margin: 0 5px;
 }
 .qna-body{
-    height: 78%;
+    height: 75%;
     width: 95%;
-    background: var(--abledark);
     display: flex;
     gap: 1%
 }
 .photo-area{
     width: 44%;
     height: 100%;
-    background: green;
 }
 .text-area{
     width: 55%;
@@ -108,17 +107,24 @@ data() {
 }
 .main-text{
     min-height: 100px;
-    background: gray;
+    height: 150px;
     font-size: 1.8rem;
     color: var(--abledark);
+    text-align: start;
 }
 .hashtags{
     min-height: 30px;
-    
+    width: 100%;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
+
+    overflow: auto;
+    gap: 10px;
 }
 .hashtag{
+    height: 20px;
+    width: fit-content;
+    white-space: nowrap;
     margin: 0;
     padding: 2px 4px;
     font-size: 1.5rem;
@@ -126,7 +132,7 @@ data() {
     border-radius: 5px;
 }
 .basic-info{
-    height: 30px;
+    height: 20px;
     display: flex;
     justify-content: flex-end;
     align-items: center;
@@ -145,7 +151,6 @@ data() {
 .comment-replies{
     width: 100%;
     flex: 64px 1 1;
-    background: red;
     overflow: auto;
     display: flex;
 }
