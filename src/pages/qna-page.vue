@@ -274,7 +274,7 @@ export default {
 .table-qna > tbody >tr{
   width: 98%;
   min-width: 125rem;
-  height: 5%;
+  flex: 5% 1 0;
   background: var(--white);
   border-radius: 10px;
   display: flex;
