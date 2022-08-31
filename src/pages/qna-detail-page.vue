@@ -160,8 +160,8 @@ created() {
     width: 100%;
 }
 .main-text{
-    min-height: 50px;
-    max-height: 150px;
+    min-height: 20%;
+    max-height: 50%;
     overflow: auto;
     font-size: 1.8rem;
     color: var(--abledark);
