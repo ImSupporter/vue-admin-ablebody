@@ -22,7 +22,7 @@ export default {
   left: 15%;
   width: 85%;
 
-  height: 100%;
+  height: 100vh;
   display: flex;
   flex-direction: column;
 

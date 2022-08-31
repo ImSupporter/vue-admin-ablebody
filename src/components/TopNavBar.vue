@@ -18,13 +18,14 @@ export default {
 
   position: static;
   width: 100%;
-  height: 6.5%;
+  height: 5vh;
 
   align-items: center;
-  margin-top: 48px;
+  margin-top: 2vh;
+  margin-bottom: 2vh;
 }
 h3{
-  font-size: 36px;
-  margin-left: 75px;
+  font-size: 3vh;
+  margin: 0 75px;
 }
 </style>

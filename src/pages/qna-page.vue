@@ -36,7 +36,7 @@
             <th v-for="head in heads" v-bind:key="head">{{head}}</th>
           </thead>
           <tbody>
-            <tr v-for="qna in data" v-bind:key="qna">
+            <tr v-for="qna in data" v-bind:key="qna" @click="moveToDetail(qna.id)">
               <td v-for="d in qna" v-bind:key="d">{{d}}</td>
             </tr>
           </tbody>
@@ -106,6 +106,9 @@ export default {
           this.fetchSearchUser(this.selectType, this.keyword, this.page)
         }
       },
+      moveToDetail(qnaID){
+        this.$router.push('/qna/'+qnaID)
+      }, 
       async fetchData(page){
         const response = await apiInstance.get('/qna',{
           params:{
