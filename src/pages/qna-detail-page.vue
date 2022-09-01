@@ -154,9 +154,10 @@ created() {
     object-fit: scale-down;
 }
 .text-area{
-    width: 55%;
+    /* width: 55%; */
     height: 100%;
-
+    flex: 55% 1 1;
+    max-width: 700px;
     display: flex;
     flex-direction: column;
 }
