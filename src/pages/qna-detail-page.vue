@@ -4,7 +4,7 @@
         <p style="font-size: 1.5rem; color: var(--ableblue); background: var(--light-shaded); padding: 3px 5px; border-radius: 5px; font-weight:700;">{{this.board.topic}}</p>
         <p style="font-size: 2rem; font-weight: 700; max-height: 55px;">{{this.board.title}}</p>
         <div class="writer-profile">
-            <img :src="board.writer.profileUrl" alt="" style="height: 100%;">
+            <img :src="board.writer.profileUrl" alt="" style="width: 40px; height:40px; object-fit: contain; background: black;">
             <div style="height: 100%; text-align: left;">
                 <p style="margin: 0; font-size:1.8rem; font-weight:700;">{{board.writer.nickname}}</p>
                 <label>{{board.writer.height}}</label>
@@ -38,12 +38,14 @@
                 </div>
                 <div class="comment-replies">
                     <div class="qna-comment" v-for="comment in board.qnaComments" :key="comment">
-                        <div style="padding:0.5%; width:98%; height:50px; display:flex; position:relative; gap:10px;">
+                        <div style="padding:0.5%; width:98%; height: auto; display:flex; position:relative; gap:10px; text-align: start;">
                             <img :src="comment.writer.profileUrl" alt="">
                             <div class="comment-replies-right">
                                 <div style="display:flex; gap: 10px; align-items: baseline;">
-                                    <b style="font-size:1.7rem">{{comment.writer.nickname}}</b>
-                                    <label style="font-size: 1.4rem; font-weight: 500;">{{comment.contents}}</label>
+                                    <label style="font-size: 1.4rem; font-weight: 500;">
+                                        <b style="font-size:1.7rem">{{comment.writer.nickname}}</b>
+                                        {{comment.contents}}
+                                    </label>
                                 </div>
                                 <div class="comment-info">
                                     <p>{{comment.createDate}}</p>
@@ -57,8 +59,10 @@
                             <img :src="reply.writer.profileUrl" alt="">
                             <div class="comment-replies-right">
                                 <div style="display:flex; gap: 10px; align-items: baseline;">
-                                    <b style="font-size:1.7rem">{{reply.writer.nickname}}</b>
-                                    <label style="font-size: 1.4rem;text-align: start;font-weight: 500;">{{reply.contents}}</label>
+                                    <label style="font-size: 1.4rem;text-align: start;font-weight: 500;">
+                                        <b style="font-size:1.7rem">{{reply.writer.nickname}}</b>
+                                        {{reply.contents}}
+                                    </label>
                                 </div>
                                 <div class="comment-info">
                                     <p>{{reply.createDate}}</p>
@@ -160,8 +164,8 @@ created() {
     width: 100%;
 }
 .main-text{
-    min-height: 20%;
-    max-height: 50%;
+    height: auto;
+    max-height: 300px;
     overflow: auto;
     font-size: 1.8rem;
     color: var(--abledark);
@@ -219,10 +223,12 @@ created() {
 .comment-replies img{
     width: 40px;
     height: 40px;
+    object-fit: contain;
     background: black;
 }
 .comment-replies-right{
     height: 100%;
+    flex: 100px 1 1;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
