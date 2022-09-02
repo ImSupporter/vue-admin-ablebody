@@ -232,7 +232,8 @@ created() {
     flex: 100px 1 1;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: flex-start;
+
 }
 .comment-info{
     display: flex;
@@ -246,7 +247,8 @@ created() {
 .qna-reply{
     padding:0.5%; 
     width:93%; 
-    height:50px; 
+    min-height:50px; 
+    height: auto;
     display:flex; 
     position:relative; 
     gap:10px;
