@@ -1,42 +1,42 @@
 <template>
     <!--모달 창-->
-    <div class="modal-background" v-if="modalShown">
-        <div class="userDetail-modal-main" v-if="modalShown">
+    <div class="modal-background" v-show="modalShown">
+        <div class="userDetail-modal-main" v-show="modalShown">
             <h3>닉네임</h3>
-            <input type="text">
+            <input type="text" v-model="nickname">
 
             <h3>이름</h3>
-            <input type="text">
+            <input type="text" v-model="name">
 
             <h3>직업</h3>
-            <input type="text">
+            <input type="text" v-model="job">
 
             <h3>성별</h3>
-            <div class="radios">
-                <label><input type="radio" name="gender" value="MALE">남자</label>
-                <label><input type="radio" name="gender" value="FEMALE">여자</label>
+            <div class="radio-btns" style="display: flex; gap: 10px;">
+                <button class="male-btn" @click="setGender('MALE')">남자</button>
+                <button class="female-btn" @click="setGender('FEMALE')">여자</button>
             </div>
 
             <h3>키</h3>
-            <input type="text">
+            <input type="text" v-model="height">
 
             <h3>몸무게</h3>
-            <input type="text">
+            <input type="text" v-model="weight">
 
             <h3>UID</h3>
-            <input type="text">
+            <input type="text" v-model="uid">
 
             <h3>핸드폰</h3>
-            <input type="text">
+            <input type="text" v-model="phone">
 
             <h3>마케팅 수신여부</h3>
-            <div class="radios">
-                <label><input type="radio" name="consent" value=true>동의</label>
-                <label><input type="radio" name="consent" value=false>거부</label>
+            <div class="radio-btns">
+                <button class="agree-btn" @click="setMarketingConsent(true)">동의</button>
+                <button class="disagree-btn" @click="setMarketingConsent(false)">거부</button>
             </div>
             
             <h3>소개글</h3>
-            <textarea></textarea>
+            <textarea  v-model="introduction"></textarea>
 
             <div class="modal-btns">
                 <button @click="modalShown = false" style="color: var(--ableblue)">취소</button>
@@ -45,10 +45,10 @@
         </div>
     </div>
 
-    <div class="page-user-detail">
+    <div class="page-user-detail" v-if="user">
         <div class="user-header">
             <div class="header-buttons">
-                <button style="background: var(--small-text-grey)" @click="modalShown = true;">수정</button>
+                <button style="background: var(--small-text-grey)" @click="modalAppear();">수정</button>
                 <button style="background: var(--ableblue)">루틴으로 가기</button>
             </div>
             <img :src="user.profileUrl" alt="유저 프로필 사진">
@@ -62,8 +62,8 @@
                 </div>
                 <div class="user-tags">
                     <p>{{user.gender}}</p>
-                    <p v-if="user.height">{{user.height + ' cm'}}</p>
-                    <p v-if="user.weight">{{user.weight + ' kg'}}</p>
+                    <p v-if="height">{{user.height + ' cm'}}</p>
+                    <p v-if="weight">{{user.weight + ' kg'}}</p>
                 </div>
             </div>
         </div>
@@ -101,16 +101,83 @@ export default {
         return {
             user:null ,
             modalShown: false,
+
+            // 수정 모달 유저 정보
+            nickname: null,
+            name: null,
+            job: null,
+            gender: null,
+            height: null,
+            weight: null,
+            uid: null,
+            phone: null,
+            consent: null,
+            introduction: null,
         }
     },
     methods: {
+        modalAppear(){
+            // 모달 뷰
+            this.modalShown = true;
+
+            // 모달 데이터 바인딩
+            this.nickname = this.user.nickname;
+            this.name = this.user.name;
+            this.job = this.user.job;
+            this.gender = this.user.gender;
+            this.height = this.user.height;
+            this.weight = this.user.weight;
+            this.uid = this.user.uid;
+            this.phone = this.user.phone;
+            this.consent = this.user.marketingConsent;
+            this.introduction = this.user.introduction;
+
+            // UI 설정
+            this.setModalGenderBtnHightlight(this.gender);
+            this.setModalConsentBtnHightlight(this.consent)
+        },
+        setModalGenderBtnHightlight(gender){
+            const modalMaleBtn = document.querySelector(".male-btn");
+            const modalFemaleBtn = document.querySelector(".female-btn");
+            
+            if(gender == "MALE"){
+                modalMaleBtn.classList.add('btn-highlight');
+                modalFemaleBtn.classList.remove('btn-highlight');
+            }
+            else if(gender == "FEMALE"){
+                modalFemaleBtn.classList.add('btn-highlight');
+                modalMaleBtn.classList.remove('btn-highlight');
+            }
+        },
+        setModalConsentBtnHightlight(isAgreed){
+            const modalAgreeBtn = document.querySelector(".agree-btn");
+            const modalDisagreeBtn = document.querySelector(".disagree-btn");
+            
+            if(isAgreed){
+                modalAgreeBtn.classList.add('btn-highlight');
+                modalDisagreeBtn.classList.remove('btn-highlight-red');
+            }
+            else{
+                modalDisagreeBtn.classList.add('btn-highlight-red');
+                modalAgreeBtn.classList.remove('btn-highlight');
+            }
+        },
+        setGender(gender){
+            this.gender = gender;
+            this.setModalGenderBtnHightlight(this.gender);
+        },
+        setMarketingConsent(isAgreed){
+            this.consent = isAgreed;
+            this.setModalConsentBtnHightlight(this.consent);
+        },
         async fetchUser(uid){
             const response = await apiInstance.get('/user/detail',{
                 params:{
                     uid: uid
                 }
             })
-            this.user = response.data.data;
+            const userData = response.data.data;
+            this.user = userData;
             console.log(this.user);
         }
     },
@@ -240,21 +307,20 @@ export default {
 .userDetail-modal-main{
     padding: 40px;
     display: flex;
-    justify-content: baseline;
     align-items: baseline;
     flex-direction: column;
     gap: 5px;
 
-  position: relative;
-  width: 40%;
-  height: 70%;
+    position: relative;
+    min-width: 475px;
+    width: 40%;
+    height: 70%;
 
-  background: #FFFFFF;
-  box-shadow: 0px 8px 30px rgba(0, 0, 0, 0.12);
-  border-radius: 16px;
-  z-index: 100;
+    background: #FFFFFF;
+    box-shadow: 0px 8px 30px rgba(0, 0, 0, 0.12);
+    z-index: 100;
 
-  overflow-y: scroll;
+    overflow-y: scroll;
 }
 
 .userDetail-modal-main > h3{
@@ -266,12 +332,12 @@ export default {
     font-size: 2rem;
     margin: 0;
     margin-bottom: 20px;
-    width: 100%;
+    width: 98%;
 }
 .userDetail-modal-main > textarea{
     font-size: 2rem;
     margin-bottom: 20px;
-    width: 100%;
+    width: 98%;
     flex: 200px 0 0;
     resize: none;
 }
@@ -304,6 +370,25 @@ export default {
   border: 0;
 
   font-weight: 700;
+}
+.radio-btns{
+    display: flex;
+    gap: 10px;
+}
+.radio-btns > button{
+    font-size: 1.8rem;
+    height: 30px;
+    width: 100px;
+    border: 0;
+    border-radius: 10px;
+}
+.btn-highlight{
+    background: var(--ableblue); 
+    color: var(--white);
+}
+.btn-highlight-red{
+    background: var(--ablered);
+    color: var(--white)
 }
 
 </style>
