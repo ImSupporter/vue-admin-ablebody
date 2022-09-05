@@ -29,7 +29,7 @@ export default createStore({
     authFail({commit}){
       commit('authFail')
       saveLoginStatus(false)
-      console.log('인증 만료!!')
+      console.log('인증 실패!!')
     },
     async userLogin({ commit }, userData){
       const response = await login(userData);

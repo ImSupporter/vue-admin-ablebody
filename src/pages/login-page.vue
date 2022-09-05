@@ -20,21 +20,27 @@
 export default {
   data() {
     return {
-      id: "",
-      pw: "",
-      loginSuccess: false,
-      loginError: false,
+    id: "",
+    pw: "",
+    loginSuccess: false,
+    loginError: false,
     }
   },
   methods: {
     async login(){
-      var loginForm = {
-        username: this.id,
-        password: this.pw
-      }
-      await this.$store.dispatch('userLogin', loginForm)
-      alert(this.id + '님 환영합니다')
-      this.$router.push('/user')
+        var loginForm = {
+            username: this.id,
+            password: this.pw
+        }
+    try {
+        const resposne = await this.$store.dispatch('userLogin', loginForm)
+        if(resposne.status === 200){
+            alert(this.id + '님 환영합니다')
+            this.$router.push('/user')
+        }
+        } catch (error) {
+            alert("아이디 또는 비밀번호를 확인해주세요");
+        }
     }
   },
 }
