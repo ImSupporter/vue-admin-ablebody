@@ -263,7 +263,7 @@ export default {
 }
 .table-user > tbody >tr{
   width: 100%;
-  height: 10%;
+  flex: 8.5% 0 0;
   background: var(--white);
   border-radius: 10px;
   display: flex;
