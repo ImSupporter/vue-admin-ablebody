@@ -47,7 +47,7 @@
                     </div>
                 </div>
                 <div class="comment-replies">
-                    <div class="qna-comment" v-for="comment in board.qnaComments" :key="comment">
+                    <div class="qna-comment" v-for="(comment,commentIdx) in board.qnaComments" :key="comment">
                         <div style="padding:0.5%; width:98%; height: auto; display:flex; position:relative; gap:10px; text-align: start;">
                             <img :src="comment.writer.profileUrl" alt="">
                             <div class="comment-replies-right">
@@ -61,11 +61,14 @@
                                     <p>{{comment.createDate}}</p>
                                     <p>좋아요 </p>
                                     <p style="margin-left:-5px">{{comment.likes+"개"}}</p>
-                                    <p style="color:var(--ableblue)">{{comment.qnaCommentId}}</p>
+                                    <div style="display:flex;" @click="deleteComment(commentIdx)">
+                                        <p style="color:var(--ableblue)" :class="{reported_red:comment.reported}">{{comment.qnaCommentId}}</p>
+                                        <p v-if="comment.reported" class="reported_red">😡신고됨</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="qna-reply" v-for="reply in comment.qnaReplies" :key="reply">
+                        <div class="qna-reply" v-for="(reply,replyIdx) in comment.qnaReplies" :key="reply">
                             <img :src="reply.writer.profileUrl" alt="">
                             <div class="comment-replies-right">
                                 <div style="display:flex; gap: 10px; align-items: baseline;">
@@ -78,7 +81,10 @@
                                     <p>{{reply.createDate}}</p>
                                     <p>좋아요 </p>
                                     <p style="margin-left:-5px">{{reply.likes+"개"}}</p>
-                                    <p style="color:var(--deep)">{{reply.qnaReplyId}}</p>
+                                    <div style="display:flex;" @click="deleteReply(commentIdx, replyIdx)">
+                                        <p style="color:var(--deep)" :class="{reported_red:reply.reported}">{{reply.qnaReplyId}}</p>
+                                        <p v-if="reply.reported" class="reported_red">😡신고됨</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -105,10 +111,33 @@ data() {
     }
 },
 methods: {
+    deleteComment(commentIdx){
+        var target = this.board.qnaComments[commentIdx];
+        // 신고당한게 아니면 삭제 불가능
+        if(!target.reported) return;
+
+        let message = '종류: Comment\n'+
+                '작성자: ' + target.writer.nickname+'\n'+
+                '내용: ' + target.contents +'\n';
+        var confirmResult = confirm(message+"\n정말 삭제하시겠습니까?")
+        console.log(confirmResult)
+    },
+    deleteReply(commentIdx, replyIdx){
+        var target = this.board.qnaComments[commentIdx].qnaReplies[replyIdx];
+        // 신고당한게 아니면 삭제 불가능
+        if(!target.reported) return;
+
+        let message = '종류: Reply\n'+
+                '작성자: ' + target.writer.nickname+'\n'+
+                '내용: ' + target.contents +'\n';
+        var confirmResult = confirm(message+"\n정말 삭제하시겠습니까?")
+        console.log(confirmResult)
+    },
     async fetchBoard(id){
         const response = await apiInstance.get('/qna/detail?id='+id);
         this.board = response.data.data;
         this.images = response.data.data.images;
+        console.log(this.board);
     }
 },
 created() {
@@ -265,7 +294,7 @@ created() {
     display: flex;
     gap: 10px;
 }
-.comment-info > p {
+.comment-info p {
     font-size: 1.4rem;
     margin:0;
     color: var(--small-text-grey)
@@ -279,5 +308,8 @@ created() {
     position:relative; 
     gap:10px;
     margin-left:6%;
+}
+.reported_red{
+    color: var(--ablered) !important;
 }
 </style>
