@@ -33,7 +33,11 @@
         </div>
         <table class="table-qna">
           <thead>
-            <th v-for="head in heads" v-bind:key="head">{{head}}</th>
+            <th v-for="(head,index) in heads" v-bind:key="head" @click="changeSortCriteria(index)">
+              {{head}}
+              <img src="@/assets/icons/sorting-order-desc.svg" alt="" v-if="sortOrder==='DESC' && index ===sortbyIdx">
+              <img src="@/assets/icons/sorting-order-asc.svg" alt="" v-if="sortOrder==='ASC'&& index ===sortbyIdx">
+            </th>
           </thead>
           <tbody>
             <tr v-for="qna in data" v-bind:key="qna" @click="moveToDetail(qna.id)">
@@ -63,10 +67,17 @@ export default {
         //검색창
         selectType: 'id',
         keyword: null,
+
         //결과
         totalPages: null,
         page: 1,
+        
+        // 테이블 헤더
         heads: ['번호', '카테고리', '제목', '작성자', '좋아요', '댓글수', '조회수', '작성시간'],
+        headsProperties: ['qnaId','topic','title','writer','likes','comments','views','createDate'], 
+        sortOrderSeq:[null, 'DESC', "ASC"],
+        sortby:"qnaId", sortbyIdx:0, sortOrder: null, sortOrderIdx:0,
+
         data: null
       }
     },
@@ -76,6 +87,38 @@ export default {
       },
       search(){
         this.page = 1
+        this.tableReload();
+      },
+      changeSortCriteria(clickedHeaderIdx){
+        if(clickedHeaderIdx === this.sortbyIdx){
+            this.sortOrderIdx = (this.sortOrderIdx+1) % 3;
+        }
+        else{
+            this.sortbyIdx = clickedHeaderIdx;
+            this.sortOrderIdx = 1;
+        }
+        this.sortby = this.headsProperties[this.sortbyIdx]
+        if(this.sortOrderIdx === 0) this.sortby = 'qnaId'
+        this.sortOrder = this.sortOrderSeq[this.sortOrderIdx];
+        
+        this.tableReload();
+      },
+      nextPage(){
+        if(this.page < this.totalPages){
+          this.page = this.page +1
+        }
+        this.tableReload();
+      },
+      previousPage(){
+        if(this.page > 1){
+          this.page = this.page -1
+        }
+        this.tableReload();
+      },
+      moveToDetail(qnaID){
+        this.$router.push('/qna/'+qnaID)
+      },
+      tableReload(){
         if(!this.keyword){
           this.fetchData(this.page)
         }
@@ -83,36 +126,12 @@ export default {
           this.fetchSearchBoard(this.selectType, this.keyword, this.page)
         }
       },
-      nextPage(){
-        if(this.page < this.totalPages){
-          this.page = this.page +1
-        }
-
-        if(!this.keyword){
-          this.fetchData(this.page)
-        }
-        else{
-          this.fetchSearchUser(this.selectType, this.keyword, this.page)
-        }
-      },
-      previousPage(){
-        if(this.page > 1){
-          this.page = this.page -1
-        }
-        if(!this.keyword){
-          this.fetchData(this.page)
-        }
-        else{
-          this.fetchSearchUser(this.selectType, this.keyword, this.page)
-        }
-      },
-      moveToDetail(qnaID){
-        this.$router.push('/qna/'+qnaID)
-      }, 
       async fetchData(page){
         const response = await apiInstance.get('/qna',{
           params:{
-            page: page
+            page: page,
+            sortby: this.sortby,
+            order: this.sortOrder,
           }
         })
         this.toalBoards = response.data.data.totalElements;
@@ -125,7 +144,9 @@ export default {
           params:{
             type: searchType, 
             keyword: keyword,
-            page: page
+            page: page,
+            sortby: this.sortby,
+            order: this.sortOrder,
           }
         })
         console.log(response);
@@ -265,6 +286,11 @@ export default {
   display: flex;
   justify-content: center;
 }
+.table-qna > thead > th > img{
+  border: 0;
+  width: 16px;
+  height: 16px;
+}
 
 .table-qna > tbody{
   width: 98%;
@@ -277,7 +303,7 @@ export default {
 .table-qna > tbody >tr{
   width: 98%;
   min-width: 125rem;
-  flex: 5% 1 0;
+  flex: 7% 0 0;
   background: var(--white);
   border-radius: 10px;
   display: flex;
