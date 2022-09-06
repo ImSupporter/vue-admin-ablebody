@@ -17,7 +17,17 @@
         </div>
         <div class="qna-body">
             <div class="photo-area" v-if="board.images.length > 0">
-                <img :src="board.images[0].url" alt="">
+                <img :src="images[imageIdx].url" alt="">
+                <img src="@/assets/icons/exlife_previous_photo_icon.svg" alt="이전 사진" class="photo_button"
+                style="left:5px" @click="imageIdx = imageIdx-1" v-if="imageIdx > 0">
+                <img src="@/assets/icons/exlife_next_photo_icon.svg" alt="다음 사진" class="photo_button" 
+                style="right:5px" @click="imageIdx = imageIdx+1;" v-if="imageIdx < images.length-1">
+                <div>
+                    <p style="width: 50px; font-size:1.8rem; margin:0 auto; background: #FFF8;
+                    border-radius: 16px;">
+                        {{imageIdx+1 + "/" + images.length}}
+                    </p>
+                </div>
             </div>
             <div class="text-area">
                 <div class="board-main">
@@ -89,12 +99,16 @@ data() {
         board: null,
         
         topic: null,
+
+        imageIdx: 0,
+        images: null,
     }
 },
 methods: {
     async fetchBoard(id){
         const response = await apiInstance.get('/qna/detail?id='+id);
         this.board = response.data.data;
+        this.images = response.data.data.images;
     }
 },
 created() {
@@ -146,12 +160,24 @@ created() {
     width: 44%;
     height: 100%;
     background: var(--abledark);
+    position: relative;
 }
-.photo-area > img{
+.photo-area > img:nth-child(1){
     width:100%; 
     height:100%; 
     background: var(--abledark); 
     object-fit: scale-down;
+}
+.photo-area > div{
+    position: absolute;
+    bottom: 3px;
+    left:0;
+    width: 100%;
+    text-align: center;
+}
+.photo_button{
+    position: absolute;
+    top: 50%;
 }
 .text-area{
     /* width: 55%; */
