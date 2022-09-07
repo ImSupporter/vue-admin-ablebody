@@ -6,7 +6,6 @@
       <p>{{modal_date}}</p>
       <p>{{modal_content}}</p>
       <div class="modal-btns">
-        <button style="color: var(--ableblue)">삭제</button>
         <button @click="modalShown = false" style="background: var(--ableblue); color: var(--white);">확인</button>
       </div>
     </div>

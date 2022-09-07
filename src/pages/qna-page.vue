@@ -21,12 +21,12 @@
       <div class="area-qna">
         <div class="search-bar">
           <select @change="selectSearchType($event)" name="search-filter" id="search-type">
-              <option value="id">번호</option>
-              <option value="topic">카테고리</option>
               <option value="title">제목</option>
-              <option value="article">내용</option>
               <option value="hashtag">해시태그</option>
+              <option value="topic">카테고리</option>
+              <option value="article">내용</option>
               <option value="writer">작성자</option>
+              <option value="id">번호</option>
           </select>
           <input type="search" @keyup.enter="search()" v-model="keyword">
           <button @click="search()">검색</button>
@@ -65,7 +65,7 @@ export default {
         toalBoards: null,
 
         //검색창
-        selectType: 'id',
+        selectType: 'title',
         keyword: null,
 
         //결과

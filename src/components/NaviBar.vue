@@ -1,6 +1,6 @@
 <template>
     <div class="background">
-        <div class="header">
+        <div class="header" @click="this.$router.push('/user')">
             <img src="../assets/ablebody-admin-logo.svg" alt="애블바디 로고" class="logo">
         </div>
         <div class="menu">
