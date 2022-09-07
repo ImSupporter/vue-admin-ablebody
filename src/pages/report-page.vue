@@ -1,13 +1,13 @@
 <template>
   <!--모달 창-->
-  <div class="modal-background" v-if="modalShown">
+  <div class="modal-background" v-if="modalShown" @click="modalShown = false">
     <div class="report-modal-main" v-if="modalShown">
       <h1>{{this.reportOnModal.user.nickname}}</h1>
       <p style="margin-top: 20px">{{this.reportOnModal.reason}}</p>
       <p>{{this.reportOnModal.contentType + ' - ' +this.reportOnModal.contentId}}</p>
       <label>{{this.reportOnModal.content}}</label>
       <div class="modal-btns">
-        <button @click="modalShown=false" style="color: var(--ableblue)">취소</button>
+        <button @click="deleteReport()" style="color: var(--ableblue)">조치완료(삭제)</button>
         <button @click="moveToReportedContent()" style="background: var(--ableblue); color: var(--white);">확인 하러가기</button>
       </div>
     </div>
@@ -50,6 +50,19 @@ export default {
         async fecthReports(){
             const response = await apiInstance.get('/report')
             this.rows = response.data.data.content
+        },
+        async deleteReport(){
+          if(confirm('정말 삭제하시겠습니까?')){
+            await apiInstance.delete('/report',
+              {
+                params:{
+                  id: this.reportOnModal.id
+                }
+              }
+            )
+            this.modalShown = false;
+            this.fecthReports()
+          }
         },
         modalSet(report){
             this.reportOnModal = report;
