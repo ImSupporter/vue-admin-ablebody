@@ -120,7 +120,22 @@ methods: {
                 '작성자: ' + target.writer.nickname+'\n'+
                 '내용: ' + target.contents +'\n';
         var confirmResult = confirm(message+"\n정말 삭제하시겠습니까?")
-        console.log(confirmResult)
+        if(confirmResult){
+            apiInstance.delete('/qna',
+            {
+                params:{
+                    type: 'ExComment',
+                    id: target.qnaCommentId
+                }
+            }
+            )
+            .then(() => {
+                this.fetchBoard(this.qnaId);
+            })
+            .catch(Error => {
+                alert(Error.response.data.message)
+            })
+        }
     },
     deleteReply(commentIdx, replyIdx){
         var target = this.board.qnaComments[commentIdx].qnaReplies[replyIdx];
@@ -131,7 +146,22 @@ methods: {
                 '작성자: ' + target.writer.nickname+'\n'+
                 '내용: ' + target.contents +'\n';
         var confirmResult = confirm(message+"\n정말 삭제하시겠습니까?")
-        console.log(confirmResult)
+        if(confirmResult){
+            apiInstance.delete('/qna',
+            {
+                params:{
+                    type: 'ExReply',
+                    id: target.qnaReplyId
+                }
+            }
+            )
+            .then(() => {
+                this.fetchBoard(this.qnaId);
+            })
+            .catch(Error => {
+                alert(Error.response.data.message)
+            })
+        }
     },
     async fetchBoard(id){
         const response = await apiInstance.get('/qna/detail?id='+id);
