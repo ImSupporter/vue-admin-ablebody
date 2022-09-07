@@ -40,7 +40,7 @@
 
             <div class="modal-btns">
                 <button @click="modalShown = false" style="color: var(--ableblue)">취소</button>
-                <button @click="modalShown = false" style="background: var(--ableblue); color: var(--white);">확인</button>
+                <button @click="modifyingUserData()" style="background: var(--ableblue); color: var(--white);">확인</button>
             </div>
         </div>
     </div>
@@ -62,8 +62,8 @@
                 </div>
                 <div class="user-tags">
                     <p>{{user.gender}}</p>
-                    <p v-if="height">{{user.height + ' cm'}}</p>
-                    <p v-if="weight">{{user.weight + ' kg'}}</p>
+                    <p v-if="user.height">{{user.height + ' cm'}}</p>
+                    <p v-if="user.weight">{{user.weight + ' kg'}}</p>
                 </div>
             </div>
         </div>
@@ -111,7 +111,7 @@ export default {
             weight: null,
             uid: null,
             phone: null,
-            consent: null,
+            marketingConsent: null,
             introduction: null,
         }
     },
@@ -129,12 +129,12 @@ export default {
             this.weight = this.user.weight;
             this.uid = this.user.uid;
             this.phone = this.user.phone;
-            this.consent = this.user.marketingConsent;
+            this.marketingConsent = this.user.marketingConsent;
             this.introduction = this.user.introduction;
 
             // UI 설정
             this.setModalGenderBtnHightlight(this.gender);
-            this.setModalConsentBtnHightlight(this.consent)
+            this.setModalConsentBtnHightlight(this.marketingConsent)
         },
         setModalGenderBtnHightlight(gender){
             const modalMaleBtn = document.querySelector(".male-btn");
@@ -167,8 +167,52 @@ export default {
             this.setModalGenderBtnHightlight(this.gender);
         },
         setMarketingConsent(isAgreed){
-            this.consent = isAgreed;
-            this.setModalConsentBtnHightlight(this.consent);
+            this.marketingConsent = isAgreed;
+            this.setModalConsentBtnHightlight(this.marketingConsent);
+        },
+        async modifyingUserData(){
+            var confirmMessage = '유저 정보를 다음과 같이 변경하시겠습니까?\n';
+            if(this.nickname !== this.user.nickname) {confirmMessage=confirmMessage + '\n닉네임: '+this.user.nickname+' ➤ '+this.nickname;}
+            if(this.name !== this.user.name) {confirmMessage=confirmMessage + '\n이름: '+this.user.name+' ➤ '+this.name;}
+            if(this.job !== this.user.job)  {confirmMessage=confirmMessage + '\n직업: '+this.user.job+' ➤ '+this.job;}
+            if(this.gender !== this.user.gender) {confirmMessage=confirmMessage + '\n성별: '+this.user.gender+' ➤ '+this.gender;}
+            if(this.height !== this.user.height) {confirmMessage=confirmMessage + '\n키: '+this.user.height+' ➤ '+this.height;}
+            if(this.weight !== this.user.weight) {confirmMessage=confirmMessage + '\n몸무게: '+this.user.weight+' ➤ '+this.weight;}
+            if(this.uid !== this.user.uid) {confirmMessage=confirmMessage + '\nUID: '+this.user.uid+' ➤ '+this.uid;}
+            if(this.phone !== this.user.phone) {confirmMessage=confirmMessage + '\n핸드폰: '+this.user.phone+' ➤ '+this.phone;}
+            if(this.marketingConsent !== this.user.marketingConsent) {confirmMessage=confirmMessage + '\n마케팅 수신동의: '+this.user.marketingConsent+' ➤ '+this.marketingConsent;}
+            if(this.introduction !== this.user.introduction) {confirmMessage=confirmMessage + '\n소개글이 변경됨';}
+
+
+            var confirmResult = confirm(confirmMessage);
+            if(confirmResult){
+                // api 요청
+                await apiInstance.post('/user/detail',
+                {
+                    nickname : this.nickname,
+                    name: this.name,
+                    job: this.job,
+                    gender: this.gender,
+                    height: this.height,
+                    weight: this.weight,
+                    uid: this.uid,
+                    phone: this.phone,
+                    marketingConsent: this.marketingConsent,
+                    introduction: this.introduction
+                },
+                {
+                    params:{
+                        uid: this.user.uid
+                    }
+                })
+                .then((Response)=>{
+                    this.user = Response.data.data;
+                    this.modalShown = false;
+                })
+                .catch((Error) => {
+                    alert(Error.response.data.message)
+                })
+            }
         },
         async fetchUser(uid){
             const response = await apiInstance.get('/user/detail',{

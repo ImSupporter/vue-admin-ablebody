@@ -24,11 +24,15 @@ export function setInterceptors(instance) {
       // Do something with response data
       return response;
     },
-    function() {
+    function(error) {
       // Any status codes that falls outside the range of 2xx cause this function to trigger
       // Do something with response error
-      store.dispatch('authFail')
-      router.push('/login')
+      if(error.response && error.status === 403){
+        store.dispatch('authFail')
+        router.push('/login')
+        return;
+      }
+      return Promise.reject(error);
     },
   );
 
