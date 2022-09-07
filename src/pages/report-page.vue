@@ -7,8 +7,8 @@
       <p>{{this.reportOnModal.contentType + ' - ' +this.reportOnModal.contentId}}</p>
       <label>{{this.reportOnModal.content}}</label>
       <div class="modal-btns">
-        <button style="color: var(--ableblue)">조치완료</button>
-        <button @click="modalShown = false" style="background: var(--ableblue); color: var(--white);">확인 하러가기</button>
+        <button @click="modalShown=false" style="color: var(--ableblue)">취소</button>
+        <button @click="moveToReportedContent()" style="background: var(--ableblue); color: var(--white);">확인 하러가기</button>
       </div>
     </div>
   </div>
@@ -47,14 +47,28 @@ export default {
       }
     },
     methods: {
-      async fecthReports(){
-        const response = await apiInstance.get('/report')
-        this.rows = response.data.data.content
-      },
-      modalSet(report){
-        this.reportOnModal = report;
-        this.modalShown = true;
-      }
+        async fecthReports(){
+            const response = await apiInstance.get('/report')
+            this.rows = response.data.data.content
+        },
+        modalSet(report){
+            this.reportOnModal = report;
+            this.modalShown = true;
+        },
+        moveToReportedContent(){
+            switch(this.reportOnModal.contentType){
+                case 'ExBoard':
+                case 'ExComment':
+                case 'ExReply' : 
+                    this.$router.push('/qna/' + this.reportOnModal.rootContentId)
+                    break;
+                case 'User':
+                    this.$router.push('/user/'+this.reportOnModal.rootContentId)
+                    break;
+                default:
+                    alert('루틴카드 댓글,답글은 아직 준비중이에요')
+            }
+        }
     },
     created() {
       this.fecthReports()
