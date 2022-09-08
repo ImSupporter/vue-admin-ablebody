@@ -267,8 +267,11 @@ export default {
     gap: 20px;
 }
 .user-header > img{
-    min-height: 100px;
-    max-height: 200px;
+    width: 150px;
+    height: 150px;
+    object-fit: contain;
+    background: black;
+    margin: auto 0;
 }
 .user-header-profile{
     height: 100%;
