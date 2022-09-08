@@ -329,7 +329,7 @@ export default {
 }
 .page-indicator{
   position: absolute;
-  bottom: 30px;
+  bottom: 20px;
   right: 30px;
   font-size: 1.6rem;
 }

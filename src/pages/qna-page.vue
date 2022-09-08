@@ -1,5 +1,5 @@
 <template>
-  <div class="page-qna">
+  <div class="page-qna" v-if="pageData">
       <div class="dashboard-qna">
         <div class="total">
           <h2>{{this.toalBoards}}</h2>
@@ -50,6 +50,9 @@
           <p>{{page}}</p>
           <button><img src="@/assets/icons/next-chevron.svg" alt="다음버튼" @click="nextPage()"></button>
         </div>
+        <div class="page-indicator">
+          {{pageData.pageable.offset+1}}-{{pageData.pageable.offset+pageData.numberOfElements}} (전체 데이터 : {{pageData.totalElements}})
+        </div>
       </div>
   </div>
 </template>
@@ -78,7 +81,8 @@ export default {
         sortOrderSeq:[null, 'DESC', "ASC"],
         sortby:"qnaId", sortbyIdx:0, sortOrder: null, sortOrderIdx:0,
 
-        data: null
+        data: null,
+        pageData:null
       }
     },
     methods: {
@@ -138,6 +142,7 @@ export default {
 
         this.totalPages = response.data.data.totalPages;
         this.data = response.data.data.content;
+        this.pageData = response.data.data;
       },
       async fetchSearchBoard(searchType, keyword, page){
         const response = await apiInstance.get('/qna/search',{
@@ -153,6 +158,7 @@ export default {
 
         this.totalPages = response.data.data.totalPages;
         this.data = response.data.data.content;
+        this.pageData = response.data.data;
       }
     },
     created() {
@@ -205,6 +211,7 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
+  position: relative;
 }
 .search-bar{
   width: 70%;
@@ -376,5 +383,11 @@ export default {
 .page-controller > p{
   margin: 0% 10%;
   font-size: 2rem;
+}
+.page-indicator{
+  position: absolute;
+  bottom: 20px;
+  right: 30px;
+  font-size: 1.6rem;
 }
 </style>
