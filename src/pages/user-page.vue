@@ -1,5 +1,5 @@
 <template>
-  <div class="page-user">
+  <div class="page-user" v-if="pageData">
       <div class="dashboard-user">
         <div class="total">
           <h2>{{totalUsers}}</h2>
@@ -47,6 +47,9 @@
           <p>{{page}}</p>
           <button @click ="nextPage()"><img src="@/assets/icons/next-chevron.svg" alt="이전버튼"></button>
         </div>
+        <div class="page-indicator">
+          {{pageData.pageable.offset+1}}-{{pageData.pageable.offset+pageData.numberOfElements}} (전체 데이터 : {{pageData.totalElements}})
+        </div>
       </div>
   </div>
 </template>
@@ -70,7 +73,10 @@ export default {
         heads:['유저', 'UID', '핸드폰', '이름', '직업'],
         page: 1,
         totalPages: null,
-        users: null
+        users: null,
+
+        // 페이지 개요
+        pageData: null
       }
     },
     methods: {
@@ -130,6 +136,8 @@ export default {
 
         this.users = response.data.data.content
         this.totalPages = response.data.data.totalPages
+
+        this.pageData = response.data.data;
       },
       async fetchData(page){
         const response = await apiInstance.get('/user', {
@@ -143,6 +151,8 @@ export default {
 
         this.users = response.data.data.content
         this.totalPages = response.data.data.totalPages
+
+        this.pageData = response.data.data;
       },
     },
     created() {
@@ -199,6 +209,8 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
+
+  position: relative;
 }
 .user-search-bar{
   width: 70%;
@@ -314,5 +326,11 @@ export default {
 .user-page-controller > p{
   margin: 0% 10%;
   font-size: 2rem;
+}
+.page-indicator{
+  position: absolute;
+  bottom: 30px;
+  right: 30px;
+  font-size: 1.6rem;
 }
 </style>
