@@ -279,6 +279,7 @@ export default {
 .table-user > tbody > tr > img{
   height: 30px;
   width: 30px;
+  object-fit: cover;
 }
 .table-user > tbody > tr > :nth-child(6n+2){
   flex: 0 16rem;
