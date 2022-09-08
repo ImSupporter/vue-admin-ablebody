@@ -183,6 +183,7 @@ export default {
   position: relative;
   width: 40%;
   height: 40%;
+  min-height: 350px;
 
   background: #FFFFFF;
   box-shadow: 0px 8px 30px rgba(0, 0, 0, 0.12);
@@ -201,7 +202,7 @@ export default {
   margin: 1px 0;
 }
 .report-modal-main > label{
-  font-size: 2.0rem;
+  font-size: 1.6rem;
   width: 100%;
   height: 80%;
   
