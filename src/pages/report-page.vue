@@ -213,6 +213,7 @@ export default {
   border-radius: 5px;
   overflow: auto;
   margin: 30px 0;
+  word-break: keep-all;
 }
 .modal-btns{
   left: 50%;
