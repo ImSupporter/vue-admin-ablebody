@@ -107,7 +107,7 @@ export default {
   margin: 10px 0;
 }
 .modal-main > :nth-child(3){
-  font-size: 2.0rem;
+  font-size: 1.6rem;
   width: 100%;
   height: 80%;
   
@@ -118,6 +118,7 @@ export default {
   border-radius: 5px;
   overflow: auto;
   text-align: start;
+  word-break: keep-all;
 }
 .modal-btns{
   left: 50%;
