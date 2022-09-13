@@ -32,7 +32,7 @@
             <div class="text-area">
                 <div class="board-main">
                     <div class="main-text">{{board.article}}</div>
-                    <div class="hashtags">
+                    <div class="hashtags" v-if="board.qnaBoardHashtags.length > 0">
                         <p class="hashtag" v-for="tag in board.qnaBoardHashtags" :key="tag">
                             {{tag.hashtag.name}}
                         </p>
