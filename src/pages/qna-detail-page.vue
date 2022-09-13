@@ -1,18 +1,18 @@
 <template>
     <div class="qna-detail-page" v-if="this.board">
         <div class="qna-header">
-        <p style="font-size: 1.5rem; color: var(--ableblue); background: var(--light-shaded); padding: 3px 5px; border-radius: 5px; font-weight:700;">{{this.board.topic}}</p>
-        <p style="font-size: 2rem; font-weight: 700; max-height: 55px;">{{this.board.title}}</p>
-        <div class="writer-profile">
-            <img :src="board.writer.profileUrl" alt="" style="width: 40px; height:40px; object-fit: contain; background: black;">
-            <div style="height: 100%; text-align: left;">
-                <p style="margin: 0; font-size:1.8rem; font-weight:700;">{{board.writer.nickname}}</p>
-                <label>{{board.writer.height}}</label>
-                <label> • </label>
-                <label>{{board.writer.weight}}</label>
-                <label> • </label>
-                <label>{{board.createDate}}</label>
-            </div>
+            <p style="font-size: 1.5rem; color: var(--ableblue); background: var(--light-shaded); padding: 3px 5px; border-radius: 5px; font-weight:700; margin:0;">{{this.board.topic}}</p>
+            <p style="font-size: 2rem; font-weight: 700; max-height: 55px;">{{this.board.title}}</p>
+            <div class="writer-profile">
+                <img :src="board.writer.profileUrl" alt="" style="width: 40px; height:40px; object-fit: contain; background: black;">
+                <div style="height: 100%; text-align: left;">
+                    <p style="margin: 0; font-size:1.8rem; font-weight:700;">{{board.writer.nickname}}</p>
+                    <label>{{board.writer.height}}</label>
+                    <label> • </label>
+                    <label>{{board.writer.weight}}</label>
+                    <label> • </label>
+                    <label>{{board.createDate}}</label>
+                </div>
         </div>
         </div>
         <div class="qna-body">
@@ -188,7 +188,8 @@ created() {
     gap: 1%;
 }
 .qna-header{
-    height: 15%;
+    height: fit-content;
+    margin-bottom: 5px;
     width: 95%;
     display: flex;
     flex-direction: column;
@@ -253,8 +254,9 @@ created() {
     height: auto;
     max-height: 300px;
     overflow: auto;
-    font-size: 1.8rem;
+    font-size: 1.6rem;
     color: var(--abledark);
+    white-space: pre-line;
     text-align: start;
 }
 .hashtags{
