@@ -9,6 +9,7 @@ import LonginPage from '@/pages/login-page'
 import UserDetailPage from '@/pages/user-detail-page';
 import QnaDetailPage from '@/pages/qna-detail-page';
 import NotiPage from '@/pages/noti-page'
+import NotiWritePage from '@/pages/noti-write-page'
 import store from './store';
 
 // 라우트 정보
@@ -53,6 +54,11 @@ const route = [
                 path: 'noti',
                 component: NotiPage,
                 name: '푸시 및 알림'
+            },
+            {
+                path: 'noti/write',
+                component: NotiWritePage,
+                name: '푸시 및 알림 작성'
             },
             {
                 path: '*',

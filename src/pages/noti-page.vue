@@ -1,8 +1,10 @@
 <template>
     <div class="main-wrapper">
-        <button id="noti-btn">
-            📝 알림 작성하기
-        </button>
+        <router-link to="/noti/write">
+            <button id="noti-btn">
+                📝 알림 작성하기
+            </button>
+        </router-link>
     </div>
 </template>
 
