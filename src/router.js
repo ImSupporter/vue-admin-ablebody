@@ -8,6 +8,7 @@ import SuggesstionPage from './pages/suggestion-page';
 import LonginPage from '@/pages/login-page'
 import UserDetailPage from '@/pages/user-detail-page';
 import QnaDetailPage from '@/pages/qna-detail-page';
+import NotiPage from '@/pages/noti-page'
 import store from './store';
 
 // 라우트 정보
@@ -47,6 +48,11 @@ const route = [
                 path: 'suggestion',
                 component: SuggesstionPage,
                 name : '제안하기'
+            },
+            {
+                path: 'noti',
+                component: NotiPage,
+                name: '푸시 및 알림'
             },
             {
                 path: '*',

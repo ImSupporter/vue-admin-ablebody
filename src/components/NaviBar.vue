@@ -20,6 +20,10 @@
                 <img src="../assets/icons/suggestion-white.svg" alt="">
                 제안하기
             </router-link>
+            <router-link to='/noti'>
+                <img src="../assets/icons/noti-white.svg">
+                푸시 및 알림
+            </router-link>
         </div>
     </div>
 </template>
