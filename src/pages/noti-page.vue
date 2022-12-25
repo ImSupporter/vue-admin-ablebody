@@ -1,7 +1,7 @@
 <template>
     <div class="main-wrapper">
         <router-link to="/noti/write">
-            <button id="noti-btn">
+            <button id="write-noti-btn">
                 📝 알림 작성하기
             </button>
         </router-link>
@@ -19,7 +19,7 @@ export default{
     position: relative;
     
 }
-#noti-btn{
+#write-noti-btn{
     display: flex;
     flex-direction: row;
     align-items: flex-start;
@@ -28,9 +28,9 @@ export default{
     gap: 10px;
 
     position: absolute;
-    width: 180px;
-    height: 40px;
-    right: 20px;
+    width: 200px;
+    height: 30px;
+    left: 80%;
     top: 0;
 
     /* primary/ableBlue */
@@ -42,6 +42,7 @@ export default{
     font-style: normal;
     font-weight: 500;
     font-size: 20px;
+    line-height: 1;
     color: white;
     border: 0;
 }
