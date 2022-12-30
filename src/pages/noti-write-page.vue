@@ -173,7 +173,7 @@
                         <option value="appVersion">앱 버전</option>
                         <option value="uid">UID</option>
                     </select>
-                    <input type="text" v-model="this.userSearchForm.keyword" id="search-word" @keyup.enter="searchUser">
+                    <input style="width: 400px;" type="text" v-model="this.userSearchForm.keyword" id="search-word" @keyup.enter="searchUser">
                 </div>
                 <div>
                     <span style="font-size: 15px; position: absolute; right:40px;">총 {{ this.searchUserInfoList.length }}명</span>
