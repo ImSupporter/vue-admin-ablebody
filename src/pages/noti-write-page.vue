@@ -1,7 +1,7 @@
 <template>
   <div class="noti-write-page">
     <div style="width: 100%; position: relative; height: fit-content;">
-        <button id="noti-btn">
+        <button id="noti-btn" @click="dispatchNoti">
             알림 보내기 👉
         </button>
     </div>
@@ -9,33 +9,21 @@
         <div class="left-input">
             <div class="each-input">
                 <div>
-                    <img src="../assets/icons/clock.svg" alt="">
-                    <h2>발송 시간</h2>
-                </div>
-                <div style="display: flex; gap: 20px;">
-                    <select name="time-option" id="sending-type" style="width: 135px;">
-                        <option value="instant">즉시</option>
-                        <option value="scheduled">예약</option>
-                    </select>
-                    <input type="date" style="width: 130px">
-                    <input type="time" style="width: 130px">
-                </div>
-            </div>
-            <div class="each-input">
-                <div>
                     <img src="../assets/icons/bell.svg" alt="">
                     <h2>알림 타입</h2>
                 </div>
                 <div style="height: 20px; display: flex">
                     <label style="font-size: 15px; margin-right: 30px; font-weight: 600;">인앱 알림</label>
-                    <label style="font-size: 15px; margin-right: 20px;"><input type="radio" name="inapp-type">모두에게</label>
-                    <label style="font-size: 15px"><input type="radio" name="inapp-type">마케팅 수신동의만</label>
+                    <label style="font-size: 15px; margin-right: 20px;"><input type="radio" v-model="this.notiForm.inAppNoti" value="all">모두에게</label>
+                    <label style="font-size: 15px; margin-right: 20px;"><input type="radio" v-model="this.notiForm.inAppNoti" value="consent">마케팅 수신동의만</label>
+                    <label style="font-size: 15px"><input type="radio" name="inapp-type" v-model="this.notiForm.inAppNoti" value="none">보내지 않음</label>
                 </div>
                 <div style="width: 80%; height: 1px; background: black; margin: 5px 0;"></div>
                 <div style="height: 20px; display: flex">
                     <label style="font-size: 15px; margin-right: 30px; font-weight: 600;">푸시 알림</label>
-                    <label style="font-size: 15px; margin-right: 20px;"><input type="radio" name="push-type">모두에게</label>
-                    <label style="font-size: 15px"><input type="radio" name="push-type">마케팅 수신동의만</label>
+                    <label style="font-size: 15px; margin-right: 20px;"><input type="radio" v-model="this.notiForm.pushNoti" value="all">모두에게</label>
+                    <label style="font-size: 15px; margin-right: 20px"><input type="radio" v-model="this.notiForm.pushNoti" value="consent">마케팅 수신동의만</label>
+                    <label style="font-size: 15px"><input type="radio" v-model="this.notiForm.pushNoti" value="none">보내지 않음</label>
                 </div>
             </div>
             <div class="each-input">
@@ -43,23 +31,23 @@
                     <img src="../assets/icons/share.svg" alt="">
                     <h2>딥링크</h2>
                 </div>
-                <input type="text" style="height: 30px; width:80%">
+                <input type="text" style="height: 30px; width:80%" v-model="this.notiForm.deeplink">
             </div>
         </div>
         <div class="right-input">
             <div class="each-input">
                 <div>
                     <img src="../assets/icons/Title.svg" alt="">
-                    <h2>제목</h2>
+                    <h2>제목 (*필수)</h2>
                 </div>
-                <textarea name="title" id="title-input" cols="35" rows="5"></textarea>
+                <textarea v-model="this.notiForm.title" id="title-input" cols="35" rows="5"></textarea>
             </div>
             <div class="each-input">
                 <div>
                     <img src="../assets/icons/message.svg" alt="">
-                    <h2>내용</h2>
+                    <h2>내용 (*필수)</h2>
                 </div>
-                <textarea name="body" id="title-input" cols="35" rows="5"></textarea>
+                <textarea v-model="this.notiForm.content" id="title-input" cols="35" rows="5"></textarea>
             </div>
         </div>
     </div>
@@ -69,14 +57,14 @@
             <h2>대상 유저</h2>
         </div>
         <div style="height: 20px; width: fit-content; margin-left: 30px;">
-            <label style="font-size: 15px; margin-right: 20px;"><input type="radio" name="user-type" checked>전체</label>
-            <label style="font-size: 15px"><input type="radio" name="user-type">선택</label>
-            <span style="font-size: 15px; position: absolute; right:40px">총 100명</span>
+            <label style="font-size: 15px; margin-right: 20px;"><input type="radio" v-model="this.notiForm.userType" value= "all" checked>전체</label>
+            <label style="font-size: 15px"><input type="radio" v-model="this.notiForm.userType" value="select">선택</label>
+            <span style="font-size: 15px; position: absolute; right:40px" v-if="this.notiForm.userType==='select'">총 {{ this.selectedUserInfoList.length }}명</span>
         </div>
-        <div class="select-user-area">
+        <div class="select-user-area" v-if="this.notiForm.userType==='select'">
             <div class="selected-user-table-bg">
                 <div class="selected-user-table-head">
-                    <input type="checkbox" name="selected-user-total-checkbox">
+                    <input type="checkbox" v-model="this.notiUserSelectAll" @change="selectAllNotiUser">
                     <p style="width: calc(15px * 5)">유저 ID</p>
                     <p style="width: calc(15px * 15)">닉네임</p>
                     <p style="width: calc(15px * 2)">성별</p>
@@ -89,74 +77,95 @@
                 </div>
                 <div class="line"/>
                 <div class="selected-user-table-content">
-                    <div class="selected-user-table-row">
-                        <input type="checkbox" name="selected-user-total-checkbox">
-                        <p style="width: calc(15px * 5)">9999</p>
-                        <p style="width: calc(15px * 15)">hellohellohellohello</p>
-                        <p style="width: calc(15px * 2)">남성</p>
-                        <p style="width: calc(15px * 10)">동의</p>
-                        <p style="width: calc(15px * 12)">2022-12-25T16:32:33</p>
-                        <p style="width: calc(15px * 12)">2022-12-25T16:32:33</p>
-                        <p style="width: calc(15px * 4)">1.4.0</p>
-                        <p style="width: calc(15px * 7)">9999999</p>
-                        <p style="width: calc(15px * 7); text-align: left;">웨이트</p>
+                    <div class="selected-user-table-row" v-for="user in selectedUserInfoList" v-bind:key="user">
+                        <input type="checkbox" v-model="this.checkedNotiUserList" v-bind:value=user @change="selectNotiUser">
+                        <p style="width: calc(15px * 5)">{{user.userId}}</p>
+                        <p style="width: calc(15px * 15)">{{ user.nickname }}</p>
+                        <p style="width: calc(15px * 2)">{{user.gender}}</p>
+                        <p style="width: calc(15px * 10)">{{user.consentToMarketing}}</p>
+                        <p style="width: calc(15px * 12)">{{user.createDate}}</p>
+                        <p style="width: calc(15px * 12)">{{user.modifiedDate}}</p>
+                        <p style="width: calc(15px * 4)">{{user.appVersion}}</p>
+                        <p style="width: calc(15px * 7)">{{user.uid}}</p>
+                        <p style="width: calc(15px * 7); text-align: left;">{{user.exercises}}</p>
                     </div>
                 </div>
             </div>
             <div style="display: flex; justify-content: right; width: calc(100% - 60px); padding: 10px 30px;">
-                <p style="margin: 0 30px; font-size: 15px">선택한 유저 10명</p>
-                <button style="background: var(--ablered); border: 0; height:24px; width:60px; border-radius: 5px; color: white; font-weight:600">삭제</button>
+                <p style="margin: 0 30px; font-size: 15px">선택한 유저 {{ this.checkedNotiUserList.length }}명</p>
+                <button style="background: var(--ablered); border: 0; height:24px; width:60px; border-radius: 5px; color: white; font-weight:600" @click="removeUser">삭제</button>
             </div>
         </div>
-        <div style="height:0px; width: 100%; border-bottom: 2px black dotted; margin: 20px 0;"/>
-        <div class="unselect-user-area">
+        <div style="height:0px; width: 100%; border-bottom: 2px black dotted; margin: 20px 0;" v-if="this.notiForm.userType==='select'"/>
+        <div class="unselect-user-area" v-if="this.notiForm.userType === 'select'">
             <div class="unselect-user-area">
                 <div class="user-search-bar">
-                    <p>성별</p> 
-                    <select name="search-gender-option" id="search-gender-option" style="width: 50px;">
-                        <option value="all">전체</option>
-                        <option value="male">남성</option>
-                        <option value="female">여성</option>
+                    <p style="font-size: 15px; margin:auto 0;">성별</p> 
+                    <select v-model="this.userSearchForm.gender" id="search-gender-option" style="width: 50px;">
+                        <option value=null>전체</option>
+                        <option value="MALE">남성</option>
+                        <option value="FEMALE">여성</option>
                     </select>
-                    <p>마케팅 수신동의</p> 
-                    <select name="search-marketing-option" id="search-gender-option" style="width: 50px;">
-                        <option value="all">전체</option>
-                        <option value="consent">동의</option>
-                        <option value="refusal">거부</option>
+                    <p style="font-size: 15px; margin:auto 0;">마케팅 수신동의</p> 
+                    <select v-model="this.userSearchForm.consentToMarketing" id="search-gender-option" style="width: 50px;">
+                        <option value=null>전체</option>
+                        <option value="true">동의</option>
+                        <option value="false">거부</option>
                     </select>
                     <div class="multiselect">
                         <div class="selectBox" @click="showCheckboxes()">
                         <select>
-                            <option>운동 종목 전체</option>
+                            <option v-if="this.userSearchForm.exercises.length === 0">운동 종목 전체</option>
+                            <option v-if="this.userSearchForm.exercises.length !== 0">{{ this.userSearchForm.exercises.length }}개 종목 선택됨</option>
                         </select>
                         <div class="overSelect"></div>
                         </div>
                         <div id="checkboxes" v-if="exerciseDropdown">
-                        <label for="one">
-                            <input type="checkbox" id="one" />First checkbox</label>
-                        <label for="two">
-                            <input type="checkbox" id="two" />Second checkbox</label>
-                        <label for="three">
-                            <input type="checkbox" id="three" />Third checkbox</label>
+                        <label for="weight">
+                            <input type="checkbox" v-model="this.userSearchForm.exercises" value="WEIGHT" id="weight"/>웨이트 트레이닝</label>
+                        <label for="pilates">
+                            <input type="checkbox" v-model="this.userSearchForm.exercises" value="PILATES" id="pilates"/>필라테스</label>
+                        <label for="yoga">
+                            <input type="checkbox" v-model="this.userSearchForm.exercises" value="YOGA" id="yoga"/>요가</label>
+                        <label for="hometraining">
+                            <input type="checkbox" v-model="this.userSearchForm.exercises" value="HOMETRAINING" id="hometraining"/>홈 트레이닝</label>
+                        <label for="crossfit">
+                            <input type="checkbox" v-model="this.userSearchForm.exercises" value="CROSSFIT" id="crossfit"/>크로스핏</label>
+                        <label for="running">
+                            <input type="checkbox" v-model="this.userSearchForm.exercises" value="RUNNING" id="running"/>러닝</label>
+                        <label for="tennis">
+                            <input type="checkbox" v-model="this.userSearchForm.exercises" value="TENNIS" id="tennis"/>테니스</label>
+                        <label for="cycle">
+                            <input type="checkbox" v-model="this.userSearchForm.exercises" value="CYCLE" id="cycle"/>사이클</label>
+                        <label for="climbing">
+                            <input type="checkbox" v-model="this.userSearchForm.exercises" value="CLIMBING" id="climbing"/>클라이밍</label>
+                        <label for="golf">
+                            <input type="checkbox" v-model="this.userSearchForm.exercises" value="GOLF" id="golf"/>골프</label>
+                        <label for="hiking">
+                            <input type="checkbox" v-model="this.userSearchForm.exercises" value="HIKING" id="hiking"/>등산</label>
+                        <label for="soccer">
+                            <input type="checkbox" v-model="this.userSearchForm.exercises" value="SOCCER" id="soccer"/>축구</label>
+                        <label for="swimming">
+                            <input type="checkbox" v-model="this.userSearchForm.exercises" value="SWIMMING" id="swimming"/>수영</label>
+                        <label for="badminton">
+                            <input type="checkbox" v-model="this.userSearchForm.exercises" value="BADMINTON" id="badminton"/>배드민턴</label>
                         </div>
                     </div>
-                    <select name="search-option" id="search-option" style="width: 70px;">
-                        <option value="all">유저 ID</option>
-                        <option value="consent">닉네임</option>
-                        <option value="refusal">생성일</option>
-                        <option value="refusal">수정일</option>
-                        <option value="refusal">앱 버전</option>
-                        <option value="refusal">UID</option>
+                    <button @click="searchUser">검색</button>
+                    <select v-model="this.userSearchForm.keywordType" id="search-option" style="width: 70px;">
+                        <option value="userId">유저 ID</option>
+                        <option value="nickname">닉네임</option>
+                        <option value="appVersion">앱 버전</option>
+                        <option value="uid">UID</option>
                     </select>
-                    <input type="text" name="search-word" id="search-word">
-                    <button>검색</button>
+                    <input type="text" v-model="this.userSearchForm.keyword" id="search-word" @keyup.enter="searchUser">
                 </div>
                 <div>
-                    <span style="font-size: 15px; position: absolute; right:40px">총 100명</span>
+                    <span style="font-size: 15px; position: absolute; right:40px;">총 {{ this.searchUserInfoList.length }}명</span>
                 </div>
                 <div class="unselected-user-table-bg">
                     <div class="unselected-user-table-head">
-                        <input type="checkbox" name="unselected-user-total-checkbox">
+                        <input type="checkbox" v-model="this.searchUserSelectAll" @change="selectAllSearchedUser()">
                         <p style="width: calc(15px * 5)">유저 ID</p>
                         <p style="width: calc(15px * 15)">닉네임</p>
                         <p style="width: calc(15px * 2)">성별</p>
@@ -169,23 +178,29 @@
                     </div>
                     <div class="line"/>
                     <div class="unselected-user-table-content">
-                        <div class="unselected-user-table-row">
-                            <input type="checkbox" name="unselected-user-total-checkbox">
-                            <p style="width: calc(15px * 5)">9999</p>
-                            <p style="width: calc(15px * 15)">hellohellohellohello</p>
-                            <p style="width: calc(15px * 2)">남성</p>
-                            <p style="width: calc(15px * 10)">동의</p>
-                            <p style="width: calc(15px * 12)">2022-12-25T16:32:33</p>
-                            <p style="width: calc(15px * 12)">2022-12-25T16:32:33</p>
-                            <p style="width: calc(15px * 4)">1.4.0</p>
-                            <p style="width: calc(15px * 7)">9999999</p>
-                            <p style="width: calc(15px * 7); text-align: left;">웨이트</p>
+                        <div class="unselected-user-table-row" v-for="user in searchUserInfoList" v-bind:key="user">
+                            <input type="checkbox" v-model="this.checkedSearchedUserList" v-bind:value = user @change="selectSearchedUser">
+                            <p style="width: calc(15px * 5)">{{user.userId}}</p>
+                            <p style="width: calc(15px * 15)">{{ user.nickname }}</p>
+                            <p style="width: calc(15px * 2)">{{user.gender}}</p>
+                            <p style="width: calc(15px * 10)">{{user.consentToMarketing}}</p>
+                            <p style="width: calc(15px * 12)">{{user.createDate}}</p>
+                            <p style="width: calc(15px * 12)">{{user.modifiedDate}}</p>
+                            <p style="width: calc(15px * 4)">{{user.appVersion}}</p>
+                            <p style="width: calc(15px * 7)">{{user.uid}}</p>
+                            <p style="width: calc(15px * 7); text-align: left; word-break: keep-all;">{{user.exercises}}</p>
                         </div>
+                    </div>
+                    <div v-if = "searchUserLoading" style="position: absolute; left: calc(50% - 100px); top: calc(50% - 25px);width: 200px; height: 50px; font-size: 15px; font-weight: 600">
+                        유저 정보를 불러오는 중입니다
+                    </div>
+                    <div v-if = "!searchUserLoading && this.searchUserInfoList.length === 0" style="position: absolute; left: calc(50% - 100px); top: calc(50% - 25px);width: 200px; height: 50px; font-size: 15px; font-weight: 600">
+                        검색 결과가 없습니다
                     </div>
                 </div>
             <div style="display: flex; justify-content: right; width: calc(100% - 60px); padding: 10px 30px;">
-                <p style="margin: 0 30px; font-size: 15px">선택한 유저 10명</p>
-                <button style="background: var(--ableblue); border: 0; height:24px; width:60px; border-radius: 5px; color: white; font-weight:600">추가</button>
+                <p style="margin: 0 30px; font-size: 15px">선택한 유저 {{ checkedSearchedUserList.length }}명</p>
+                <button style="background: var(--ableblue); border: 0; height:24px; width:60px; border-radius: 5px; color: white; font-weight:600" @click="addUser">추가</button>
             </div>
         </div>
         </div>
@@ -194,18 +209,204 @@
 </template>
 
 <script>
+import { apiInstance } from '@/api';
 export default {
     name: "NotiWritePage",
     data() {
         return {
             exerciseDropdown: false,
+            notiForm : {
+                inAppNoti: "none",
+                pushNoti: "none",
+                deeplink: null,
+                title: null,
+                content: null,
+                userType:"all",
+                userList:[]
+            },
+            userSearchForm : {
+                gender : null,
+                consentToMarketing: null,
+                exercises : [],
+                keywordType : "nickname",
+                keyword : null
+            },
+            //테이블에 있는 전체 유저
+            selectedUserInfoList:[],
+            searchUserInfoList:[],
+            // 검색용
+            searchUserLoading: false,
+            searchUserRawList: [],
+            // (하단)체크 된 유저
+            checkedSearchedUserList: [],
+            searchUserSelectAll: false,
+            // (상단)체크 된 유저
+            checkedNotiUserList:[],
+            notiUserSelectAll: false,
         }
     },
     methods: {
         showCheckboxes(){
-            console.log(this.exerciseDropdown)
             if(this.exerciseDropdown) this.exerciseDropdown = false;
             else this.exerciseDropdown = true;
+        },
+        sendNotiForm(){
+            console.log(this.notiForm)
+            alert(this.notiForm)
+        },
+        async searchUser(){
+            var params = {
+                gender : this.userSearchForm.gender,
+                marketingConsent : this.userSearchForm.consentToMarketing,
+                exercises : this.userSearchForm.exercises,
+                userId : null,
+                nickname : null,
+                appVersion : null,
+                uid : null
+            }
+            switch(this.userSearchForm.keywordType){
+                case 'userId' : 
+                    params.userId = this.userSearchForm.keyword
+                    break
+                case 'nickname' :
+                    params.nickname = this.userSearchForm.keyword
+                    break;
+                case 'appVersion' :
+                    params.appVersion = this.userSearchForm.keyword
+                    break;
+                case 'uid' :
+                    params.uid = this.userSearchForm.keyword
+                    break;
+            }
+            this.searchUserInfoList = []
+            this.searchUserLoading = true
+            const response = await apiInstance.post('/user/search-noti', params)
+            this.searchUserLoading = false
+            console.log(response)
+            this.searchUserRawList = response.data.dataList
+
+            this.searchUserRawList.forEach(rawUser =>{
+                if(this.selectedUserInfoList.findIndex(selectedUser => rawUser.userId === selectedUser.userId) < 0){
+                    this.searchUserInfoList.push(rawUser)   
+                }
+            })
+        },
+        selectAllSearchedUser(){
+            if(this.searchUserSelectAll){
+                this.searchUserInfoList.forEach(user =>{
+                    this.checkedSearchedUserList.push(user)
+                })
+            }
+            else{
+                this.checkedSearchedUserList = []
+            }
+        },
+        selectSearchedUser(){
+            if(this.checkedSearchedUserList.length ===this.searchUserInfoList.length){
+                this.searchUserSelectAll = true
+            }
+            else{
+                this.searchUserSelectAll = false
+            }
+        },
+        addUser(){
+            var i = 0;
+            while(i < this.checkedSearchedUserList.length){
+                let checkedUser = this.checkedSearchedUserList[i]
+                let idx = this.searchUserInfoList.indexOf(checkedUser);
+                console.log(this.checkedSearchedUserList)
+                this.selectedUserInfoList.push(checkedUser)
+                this.searchUserInfoList.splice(idx, 1)
+                i++
+            }
+            this.checkedSearchedUserList = []
+            this.searchUserSelectAll =false;
+        },
+        removeUser(){
+            this.checkedNotiUserList.forEach(user =>{
+                let idx = this.selectedUserInfoList.indexOf(user)
+                this.selectedUserInfoList.splice(idx,1)
+                if(this.searchUserRawList.findIndex(rawUser => rawUser.userId === user.userId) > 0){
+                    this.searchUserInfoList.unshift(user)
+                }
+            })
+            this.checkedNotiUserList = []
+            this.notiUserSelectAll = false
+        },
+        selectAllNotiUser(){
+            if(this.notiUserSelectAll){
+                this.selectedUserInfoList.forEach(user =>{
+                    this.checkedNotiUserList.push(user)
+                })
+            }
+            else{
+                this.checkedNotiUserList = []
+            }
+        },
+        selectNotiUser(){
+            if(this.checkedNotiUserList.length ===this.selectedUserInfoList.length){
+                this.notiUserSelectAll = true
+            }
+            else{
+                this.notiUserSelectAll = false
+            }
+        },
+        async dispatchNoti(){
+            if(this.notiForm.inAppNoti === 'none' && this.notiForm.pushNoti === 'none'){
+                alert('알림 타입을 확인해주세요\n(인앱 알림, 푸시 알림 중 1개는 선택되어야 합니다)')
+                return
+            }
+            if(this.notiForm.title === null){
+                alert('제목을 입력해주세요')
+                return
+            }
+            if(this.notiForm.content === null){
+                alert('내용을 입력해주세요')
+                return
+            }
+
+
+            let confirmMessage = "다음과 같이 알림을 발송합니다\n\n"
+            switch(this.notiForm.inAppNoti){
+                case 'all':
+                    confirmMessage += "인앱 알림 : 전체\n"
+                    break;
+                case 'consent':
+                    confirmMessage += "인앱 알림 : 마케팅 수신동의만\n"
+                    break;
+                case 'none':
+                    confirmMessage += "인앱 알림 : 보내지 않음\n"
+                    break;
+            }
+            switch(this.notiForm.pushNoti){
+                case 'all':
+                    confirmMessage += "푸시 알림 : 전체\n"
+                    break;
+                case 'consent':
+                    confirmMessage += "푸시 알림 : 마케팅 수신동의만\n"
+                    break;
+                case 'none':
+                    confirmMessage += "푸시 알림 : 보내지 않음\n"
+                    break;
+            }
+            confirmMessage += ("제목 : " + this.notiForm.title + "\n")
+            confirmMessage += ("내용 : " + this.notiForm.content + "\n")
+            confirmMessage += ("딥링크 : " + this.notiForm.deeplink + "\n")
+            if(this.notiForm.userType === "all"){
+                confirmMessage += ("대상 유저 : 전체")
+            }
+            else{
+                confirmMessage += ("대상 유저 : 총 " + this.selectedUserInfoList.length + "명")
+            }
+            if(confirm(confirmMessage)){
+                this.selectedUserInfoList.forEach(u =>{
+                    this.notiForm.userList.push(u.userId)
+                })
+                let response = await apiInstance.post('/noti/dispatch', this.notiForm)
+                console.log(response)
+                this.notiForm.userList = []
+            }
+            
         }
     },
 }
@@ -359,6 +560,7 @@ export default {
     border-radius: 10px;
 
     overflow: auto;
+    position: relative;
 }
 .unselected-user-table-head{
     width: fit-content;
@@ -384,6 +586,7 @@ export default {
     width: 100%;
     height: fit-content;
     border-bottom: black solid 1px;
+    align-items: center;
 }
 .unselected-user-table-row > p{
     font-size: 15px;
@@ -434,6 +637,7 @@ export default {
   width: 100%;
   z-index: 100;
   text-align: start;
+  font-size: 14px;
 }
 
 #checkboxes label:hover {
