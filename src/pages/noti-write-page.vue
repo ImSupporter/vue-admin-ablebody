@@ -1,4 +1,19 @@
 <template>
+    <div style="height:100%; width: 100%; background-color: rgba(0,0,0,0.8); position: absolute; left:0; top:0;z-index: 999;" v-if="this.notiLoading">
+        <div style=
+        "background:white; height:100; width: 500px; 
+        position:absolute; 
+        left: calc(50% - 250px); top:calc(50% - 50px);
+        border-radius: 10px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        ">
+        <h1>
+            알림을 보내는 중입니다
+        </h1>
+        </div>
+    </div>
   <div class="noti-write-page">
     <div style="width: 100%; position: relative; height: fit-content;">
         <button id="noti-btn" @click="dispatchNoti">
@@ -31,7 +46,7 @@
                     <img src="../assets/icons/share.svg" alt="">
                     <h2>딥링크</h2>
                 </div>
-                <input type="text" style="height: 30px; width:80%" v-model="this.notiForm.deeplink">
+                <input type="text" style="height: 30px; width:80%" v-model="this.notiForm.deepLink">
             </div>
         </div>
         <div class="right-input">
@@ -218,7 +233,7 @@ export default {
             notiForm : {
                 inAppNoti: "none",
                 pushNoti: "none",
-                deeplink: null,
+                deepLink: null,
                 title: null,
                 content: null,
                 userType:"all",
@@ -243,6 +258,8 @@ export default {
             // (상단)체크 된 유저
             checkedNotiUserList:[],
             notiUserSelectAll: false,
+            // 노티 로딩
+            notiLoading: false
         }
     },
     methods: {
@@ -389,22 +406,34 @@ export default {
                     confirmMessage += "푸시 알림 : 보내지 않음\n"
                     break;
             }
-            confirmMessage += ("제목 : " + this.notiForm.title + "\n")
-            confirmMessage += ("내용 : " + this.notiForm.content + "\n")
-            confirmMessage += ("딥링크 : " + this.notiForm.deeplink + "\n")
             if(this.notiForm.userType === "all"){
-                confirmMessage += ("대상 유저 : 전체")
+                confirmMessage += ("대상 유저 : 전체\n")
             }
             else{
-                confirmMessage += ("대상 유저 : 총 " + this.selectedUserInfoList.length + "명")
+                confirmMessage += ("대상 유저 : 총 " + this.selectedUserInfoList.length + "명\n")
             }
+            confirmMessage += ("제목 : " + this.notiForm.title + "\n")
+            confirmMessage += ("내용 : " + this.notiForm.content + "\n")
+            confirmMessage += ("딥링크 : " + this.notiForm.deepLink + "\n")
             if(confirm(confirmMessage)){
                 this.selectedUserInfoList.forEach(u =>{
                     this.notiForm.userList.push(u.userId)
                 })
+                this.notiLoading = true;
                 let response = await apiInstance.post('/noti/dispatch', this.notiForm)
+                this.notiLoading = false
                 console.log(response)
+                if(response.status === 200){
+                    alert('알림을 성공적으로 발송하였습니다')
+                }
+                else{
+                    alert('알림을 발송하지 못하였습니다\n콘솔을 통해 에러메시지를 확인해주세요')
+                }
                 this.notiForm.userList = []
+                this.notiForm.title = null;
+                this.notiForm.content = null;
+                this.notiForm.inAppNoti = "none"
+                this.notiForm.pushNoti = "none"
             }
             
         }
