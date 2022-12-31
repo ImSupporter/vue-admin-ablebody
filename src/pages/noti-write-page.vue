@@ -136,6 +136,7 @@
                         <div class="overSelect"></div>
                         </div>
                         <div id="checkboxes" v-if="exerciseDropdown">
+                            <div style="color: red; font-size: 12px; font-weight: 600;">*종목 복수 선택 시 교집합으로 적용</div>
                         <label for="weight">
                             <input type="checkbox" v-model="this.userSearchForm.exercises" value="WEIGHT" id="weight"/>웨이트 트레이닝</label>
                         <label for="pilates">
